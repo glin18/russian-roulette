@@ -32,11 +32,17 @@ function CreateGame() {
         >
           <div className="modal-content">
             <div className="modal-content-header">
-              <div></div>
+              <div style={{ visibility: "hidden" }}> &times;</div>
               <div className="bet-button">Bet 0.001 ETH</div>
               <span className="close" onClick={onClickClose}>
                 &times;
               </span>
+            </div>
+            <div className="body-button">AUTO MATCH</div>
+            <div className="body-button">INVITE WITH CODE</div>
+            <div className="room-code">
+              <input type="text" placeholder="Enter room code..." />
+              <div className="join">JOIN</div>
             </div>
           </div>
         </div>

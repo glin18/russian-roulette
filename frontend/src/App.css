@@ -87,6 +87,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .modal-content-header {
@@ -112,8 +114,44 @@ body {
 }
 
 .bet-button {
-  padding: 15px;
+  padding: 12px;
   background-color: #262a56;
   color: white;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+.body-button {
+  background-color: rgba(255, 255, 255, 0.655);
+  padding: 10px 100px;
+  border-radius: 15px;
+  font-weight: 600;
+}
+
+.room-code {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  gap: 40px;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.655);
+}
+
+.room-code input {
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-weight: 600;
+}
+
+.join {
+  padding: 7px 14px;
+  background-color: rgba(255, 196, 0, 0.889);
+  border-radius: 10px;
+  font-weight: 600;
 }
