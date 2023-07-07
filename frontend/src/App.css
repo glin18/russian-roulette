@@ -8,6 +8,7 @@
 
 html {
   height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -18,10 +19,13 @@ body {
 /* Header */
 #header {
   border: 5px dashed red;
-
-  padding: 20px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #title {
+  font-weight: 600;
   color: white;
 }
