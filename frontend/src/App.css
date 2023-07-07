@@ -14,11 +14,12 @@ html {
 body {
   min-height: 100%;
   background-color: black;
+  color: white;
 }
 
 /* Header */
 #header {
-  border: 5px dashed red;
+  /* border: 5px dashed red; */
   padding: 25px;
   display: flex;
   align-items: center;
@@ -27,5 +28,35 @@ body {
 
 #title {
   font-weight: 600;
-  color: white;
+  font-size: 20px;
+}
+
+/* Container */
+.outer-container {
+  padding: 40px;
+  /* border: 5px dashed blue; */
+}
+
+.page-title {
+  font-weight: 600;
+  font-size: 27px;
+}
+
+.inner-container {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.inner-container div {
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.inner-container img {
+  width: 40%;
 }

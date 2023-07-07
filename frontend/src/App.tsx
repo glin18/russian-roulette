@@ -3,7 +3,11 @@ import Home from "./Home";
 
 // RainbowKit
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+  darkTheme,
+} from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -33,7 +37,15 @@ function App() {
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider
+          chains={chains}
+          theme={darkTheme({
+            accentColor: "#FFC700",
+            accentColorForeground: "black",
+            fontStack: "system",
+            overlayBlur: "small",
+          })}
+        >
           <Home />
         </RainbowKitProvider>
       </WagmiConfig>
