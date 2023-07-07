@@ -1,12 +1,15 @@
 import createGameImage from "../assets/game.png";
 import { useAccount } from "wagmi";
 import { useState } from "react";
+import { io } from "socket.io-client";
 
 function CreateGame() {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const { address } = useAccount();
   console.log(address);
+
+  const socket = io("http://localhost:3001");
 
   const onClickCreate = () => {
     setShowModal(true);
