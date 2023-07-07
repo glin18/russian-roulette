@@ -126,6 +126,7 @@ body {
   padding: 10px 100px;
   border-radius: 15px;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .room-code {
@@ -154,4 +155,5 @@ body {
   background-color: rgba(255, 196, 0, 0.889);
   border-radius: 10px;
   font-weight: 600;
+  cursor: pointer;
 }
