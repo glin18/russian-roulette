@@ -3,13 +3,22 @@ import { useAccount } from "wagmi";
 import { useState } from "react";
 import { io } from "socket.io-client";
 
+const socket = io("http://localhost:3001");
+
 function CreateGame() {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [roomCode, setRoomCode] = useState<string>("");
 
   const { address } = useAccount();
   console.log(address);
 
-  const socket = io("http://localhost:3001");
+  // pass room code to backend
+  const joinRoom = () => {
+    setRoomCode("1234");
+    if(roomCode !== "") {
+      socket.emit("join_room", roomCode);
+    }
+  }
 
   const onClickCreate = () => {
     setShowModal(true);
@@ -41,7 +50,7 @@ function CreateGame() {
                 &times;
               </span>
             </div>
-            <div className="body-button">AUTO MATCH</div>
+            <div className="body-button" onClick={joinRoom}>AUTO MATCH</div>
             <div className="body-button">INVITE WITH CODE</div>
             <div className="room-code">
               <input type="text" placeholder="Enter room code..." />
