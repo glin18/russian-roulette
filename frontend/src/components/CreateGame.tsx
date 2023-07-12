@@ -2,6 +2,7 @@ import createGameImage from "../assets/game.png";
 import { useAccount } from "wagmi";
 import { useState } from "react";
 import { io } from "socket.io-client";
+import GameRoom from "./GameRoom";
 
 const socket = io("http://localhost:3001");
 
@@ -55,12 +56,16 @@ function CreateGame() {
 
   return (
     <main className="outer-container">
-      <div className="page-title">YOU BET YOUR LIFE</div>
-      <div className="inner-container">
-        <div className="create-game" onClick={onClickCreate}>
-          CREATE GAME ROOM
-        </div>
-        <img src={createGameImage} alt="create game image" />
+      {roomCode ? (
+        <GameRoom room={roomCode} />
+      ) : (
+        <>
+          <div className="page-title">YOU BET YOUR LIFE</div>
+          <div className="inner-container">
+            <div className="create-game" onClick={onClickCreate}>
+              CREATE GAME ROOM
+            </div>
+            <img src={createGameImage} alt="create game image" />
 
         <div
           id="myModal"
