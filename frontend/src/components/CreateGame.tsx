@@ -42,6 +42,7 @@ function CreateGame() {
       const roomId = data.roomId;
   
       console.log("Joined room:", roomId);
+      setRoomCode(roomId);
   
       // Now you can use roomId as needed
     });
@@ -55,52 +56,56 @@ function CreateGame() {
   };
 
   return (
-    <main className="outer-container">
-      {roomCode ? (
-        <GameRoom room={roomCode} />
-      ) : (
-        <>
-          <div className="page-title">YOU BET YOUR LIFE</div>
-          <div className="inner-container">
-            <div className="create-game" onClick={onClickCreate}>
-              CREATE GAME ROOM
-            </div>
-            <img src={createGameImage} alt="create game image" />
+    <>
+      <main className="outer-container">
+        {roomCode ? (
+          <GameRoom room={roomCode} />
+        ) : (
+          <>
+            <div className="page-title">YOU BET YOUR LIFE</div>
+            <div className="inner-container">
+              <div className="create-game" onClick={onClickCreate}>
+                CREATE GAME ROOM
+              </div>
+              <img src={createGameImage} alt="create game image" />
 
-        <div
-          id="myModal"
-          className="modal"
-          style={{ display: showModal ? "block" : "none" }}
-        >
-          <div className="modal-content">
-            <div className="modal-content-header">
-              <div style={{ visibility: "hidden" }}> &times;</div>
-              <div className="bet-button">Bet 0.001 ETH</div>
-              <span className="close" onClick={onClickClose}>
-                &times;
-              </span>
-            </div>
-            <div className="body-button" onClick={joinRandomRoom}>
-              AUTO MATCH
-            </div>
-            <div className="body-button" onClick={createPrivateRoom}>
-              INVITE WITH CODE
-            </div>
-            <div className="room-code">
-              <input
-                type="text"
-                placeholder="Enter room code..."
-                value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
-              />
-              <div className="join" onClick={joinPrivateRoom}>
-                JOIN
+              <div
+                id="myModal"
+                className="modal"
+                style={{ display: showModal ? "block" : "none" }}
+              >
+                <div className="modal-content">
+                  <div className="modal-content-header">
+                    <div style={{ visibility: "hidden" }}> &times;</div>
+                    <div className="bet-button">Bet 0.001 ETH</div>
+                    <span className="close" onClick={onClickClose}>
+                      &times;
+                    </span>
+                  </div>
+                  <div className="body-button" onClick={joinRandomRoom}>
+                    AUTO MATCH
+                  </div>
+                  <div className="body-button" onClick={createPrivateRoom}>
+                    INVITE WITH CODE
+                  </div>
+                  <div className="room-code">
+                    <input
+                      type="text"
+                      placeholder="Enter room code..."
+                      value={roomCode}
+                      onChange={(e) => setRoomCode(e.target.value)}
+                    />
+                    <div className="join" onClick={joinPrivateRoom}>
+                      JOIN
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </main>
+          </>
+        )}
+      </main>
+    </>
   );
 }
 
