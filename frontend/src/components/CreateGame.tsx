@@ -10,15 +10,40 @@ function CreateGame() {
   const [roomCode, setRoomCode] = useState<string>("");
 
   const { address } = useAccount();
-  console.log(address);
 
   // pass room code to backend
-  const joinRoom = () => {
-    setRoomCode("1234");
-    if(roomCode !== "") {
-      socket.emit("join_room", roomCode);
-    }
-  }
+  const joinRandomRoom = () => {
+    socket.emit("joinRandomRoom");
+  };
+
+  const joinPrivateRoom = () => {
+    console.log("Joining room:", roomCode);
+    socket.emit("joinPrivateRoom", { roomId: roomCode });
+  };
+
+  const createPrivateRoom = () => {
+    socket.emit("createPrivateRoom");
+  };
+
+  // Listen for the 'roomCreated' event
+  socket.on("roomCreated", (data) => {
+    // 'data' is the object that the server sent, which includes the roomId
+    const roomId = data.roomId;
+
+    console.log("roomCreated, Joined room:", roomId);
+
+    // Now you can use roomId as needed
+  });
+
+    // Listen for the 'joinedRoom' event
+    socket.on("joinedRoom", (data) => {
+      // 'data' is the object that the server sent, which includes the roomId
+      const roomId = data.roomId;
+  
+      console.log("Joined room:", roomId);
+  
+      // Now you can use roomId as needed
+    });
 
   const onClickCreate = () => {
     setShowModal(true);
@@ -50,11 +75,22 @@ function CreateGame() {
                 &times;
               </span>
             </div>
-            <div className="body-button" onClick={joinRoom}>AUTO MATCH</div>
-            <div className="body-button">INVITE WITH CODE</div>
+            <div className="body-button" onClick={joinRandomRoom}>
+              AUTO MATCH
+            </div>
+            <div className="body-button" onClick={createPrivateRoom}>
+              INVITE WITH CODE
+            </div>
             <div className="room-code">
-              <input type="text" placeholder="Enter room code..." />
-              <div className="join">JOIN</div>
+              <input
+                type="text"
+                placeholder="Enter room code..."
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value)}
+              />
+              <div className="join" onClick={joinPrivateRoom}>
+                JOIN
+              </div>
             </div>
           </div>
         </div>
