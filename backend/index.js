@@ -178,51 +178,6 @@ io.on("connection", (socket) => {
     console.log(`Sent roomLeft event to player ${socket.id} with room ID ${room}.`);
     });
 
-  socket.on("leaveRoom", (data) => {
-    console.log("leaveRoom event received from:", socket.id);
-    console.log("Data received:", data);
-
-    let room = data.roomId;
-    console.log(`Attempting to leave room: ${room}`);
-
-    // If the player is in a public room...
-    if (publicRooms[room]) {
-      console.log(`Player ${socket.id} is in public room ${room}. Removing player from room.`);
-      // Remove the player from the room
-      publicRooms[room] = publicRooms[room].filter((player) => player !== socket.id);
-      console.log(`Player ${socket.id} removed from public room ${room}.`);
-
-      // If there are no more players in the room, delete the room
-      if (publicRooms[room].length === 0) {
-        console.log(`Room ${room} is empty. Deleting room.`);
-        delete publicRooms[room];
-        console.log(`Room ${room} deleted.`);
-        }
-    } else if (privateRooms[room]) {
-        console.log(`Player ${socket.id} is in private room ${room}. Removing player from room.`);
-        // Remove the player from the room
-        privateRooms[room] = privateRooms[room].filter((player) => player !== socket.id);
-        console.log(`Player ${socket.id} removed from private room ${room}.`);
-
-        // If there are no more players in the room, delete the room
-        if (privateRooms[room].length === 0) {
-            console.log(`Room ${room} is empty. Deleting room.`);
-            delete privateRooms[room];
-            console.log(`Room ${room} deleted.`);
-        }
-    } else {
-        console.log(`Player ${socket.id} is not in room ${room}.`);
-    }
-
-    // Make the socket leave the room
-    socket.leave(room);
-    console.log(`Player ${socket.id} left room ${room}.`);
-
-    // Emit a 'roomLeft' event back to the client, including the room ID
-    socket.emit("roomLeft", { roomId: room });
-    console.log(`Sent roomLeft event to player ${socket.id} with room ID ${room}.`);
-    });
-
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
     if (playerData[socket.id]?.type === "Private") {
