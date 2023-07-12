@@ -34,7 +34,6 @@ body {
 /* Container */
 .outer-container {
   padding: 40px;
-  /* border: 5px dashed blue; */
 }
 
 .page-title {
@@ -63,7 +62,6 @@ body {
 
 /* Modal */
 .modal {
-  /* display: none; Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
@@ -156,4 +154,10 @@ body {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* Game Room */
+.game-room-container img {
+  width: 30%;
+  height: 30%;
 }

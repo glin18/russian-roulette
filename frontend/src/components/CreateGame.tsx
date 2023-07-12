@@ -10,16 +10,21 @@ function CreateGame() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [roomCode, setRoomCode] = useState<string>("");
 
+  // User will enter the GameRoom based on this state
+  const [room, setRoom] = useState<string>("");
+
   const { address } = useAccount();
 
   // pass room code to backend
   const joinRandomRoom = () => {
     socket.emit("joinRandomRoom");
+    setRoom(roomCode);
   };
 
   const joinPrivateRoom = () => {
     console.log("Joining room:", roomCode);
     socket.emit("joinPrivateRoom", { roomId: roomCode });
+    setRoom(roomCode);
   };
 
   const createPrivateRoom = () => {
@@ -30,22 +35,24 @@ function CreateGame() {
   socket.on("roomCreated", (data) => {
     // 'data' is the object that the server sent, which includes the roomId
     const roomId = data.roomId;
+    setRoom(roomId);
 
     console.log("roomCreated, Joined room:", roomId);
 
     // Now you can use roomId as needed
   });
 
-    // Listen for the 'joinedRoom' event
-    socket.on("joinedRoom", (data) => {
-      // 'data' is the object that the server sent, which includes the roomId
-      const roomId = data.roomId;
-  
-      console.log("Joined room:", roomId);
-      setRoomCode(roomId);
-  
-      // Now you can use roomId as needed
-    });
+  // Listen for the 'joinedRoom' event
+  socket.on("joinedRoom", (data) => {
+    // 'data' is the object that the server sent, which includes the roomId
+    const roomId = data.roomId;
+    setRoom(roomId);
+
+    console.log("Joined room:", roomId);
+    setRoomCode(roomId);
+
+    // Now you can use roomId as needed
+  });
 
   const onClickCreate = () => {
     setShowModal(true);
@@ -58,8 +65,8 @@ function CreateGame() {
   return (
     <>
       <main className="outer-container">
-        {roomCode ? (
-          <GameRoom room={roomCode} />
+        {room ? (
+          <GameRoom room={room} />
         ) : (
           <>
             <div className="page-title">YOU BET YOUR LIFE</div>
