@@ -161,3 +161,19 @@ body {
   width: 30%;
   height: 30%;
 }
+
+.game-room-core {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.action-button {
+  background-color: #b8621b;
+  width: 100px;
+  height: 40px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 7px;
+  cursor: pointer;
+}
