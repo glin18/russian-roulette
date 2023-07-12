@@ -8,6 +8,11 @@ app.use(cors());
 const server = http.createServer(app);
 const publicRooms = {};
 const privateRooms = {};
+const playerData = {};
+
+// type playerData = {
+//   socketId: {roomId: String, address: String}
+// };
 
 const io = new Server(server, {
   cors: {
@@ -24,7 +29,7 @@ function generateRoomId() {
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  socket.on("joinRandomRoom", () => {
+  socket.on("joinRandomRoom", (data) => {
     console.log("joinRandomRoom event received from:", socket.id);
 
     // Extract roomIds from publicRooms
@@ -43,7 +48,12 @@ io.on("connection", (socket) => {
     }
 
     // Add the player (socket.id) to the room
-    publicRooms[room].push(socket.id);
+    publicRooms[room].push(data.address);
+    playerData[socket.id] = {
+      address: data.address,
+      room: room,
+      type: "Public",
+    };
     console.log(
       "Added player to the room:",
       room,
@@ -55,21 +65,26 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     // Notify the client they have successfully joined the room
-    socket.emit("joinedRoom", { roomId: room });
+    socket.emit("joinedRoom", { roomId: room, players: publicRooms[room] });
     console.log("Notified player about joined room:", room);
   });
 
   // When the server receives a 'createPrivateRoom' event...
-  socket.on("createPrivateRoom", () => {
+  socket.on("createPrivateRoom", (data) => {
     // Generate a new room ID
     let room = generateRoomId();
 
     // Initialize the new room in the privateRooms object with the socket's ID
-    privateRooms[room] = [socket.id];
+    privateRooms[room] = [data.address];
+    playerData[socket.id] = {
+      address: data.address,
+      room: room,
+      type: "Private",
+    };
 
     // Make the socket join the new room
     socket.join(room);
-    console.log("Created private room:", room, "with player:", socket.id)
+    console.log("Created private room:", room, "with player:", data.address);
 
     // Emit a 'roomCreated' event back to the client, including the room ID
     socket.emit("roomCreated", { roomId: room });
@@ -78,36 +93,56 @@ io.on("connection", (socket) => {
   socket.on("joinPrivateRoom", (data) => {
     console.log("joinPrivateRoom event received from:", socket.id);
     console.log("Data received:", data);
-  
+
     let room = data.roomId;
     console.log(`Attempting to join private room: ${room}`);
-  
+
     if (!privateRooms[room]) {
       console.log(`Room ${room} does not exist.`);
       socket.emit("error", { message: "Room does not exist." });
       return;
     }
-  
+
     if (privateRooms[room].length >= 4) {
       console.log(`Room ${room} is full.`);
       socket.emit("error", { message: "Room is full." });
       return;
     }
-  
+
     console.log(`Room ${room} exists and is not full. Adding player to room.`);
-    privateRooms[room].push(socket.id);
-    
-    console.log(`Player added to room ${room}. Current players:`, privateRooms[room]);
-  
+    privateRooms[room].push(data.address);
+    playerData[socket.id] = {
+      address: data.address,
+      room: room,
+      type: "Private",
+    };
+
+    console.log(
+      `Player added to room ${room}. Current players:`,
+      privateRooms[room]
+    );
+
     socket.join(room);
-    console.log(`Player ${socket.id} joined room ${room}.`);
-  
+    console.log(`Player ${data.address} joined room ${room}.`);
+
     socket.emit("joinedRoom", { roomId: room });
-    console.log(`Sent joinedRoom event to player ${socket.id} with room ID ${room}.`);
+    console.log(
+      `Sent joinedRoom event to player ${data.address} with room ID ${room}.`
+    );
   });
 
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
+    if (playerData[socket.id]?.type === "Private") {
+      privateRooms[playerData[socket.id]?.room] = privateRooms[
+        playerData[socket.id]?.room
+      ]?.filter((address) => address != playerData[socket.id].address);
+    } else {
+      publicRooms[playerData[socket.id]?.room] = publicRooms[
+        playerData[socket.id]?.room
+      ]?.filter((address) => address != playerData[socket.id].address);
+    }
+    delete playerData[socket.id];
   });
 });
 

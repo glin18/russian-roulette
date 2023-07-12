@@ -12,23 +12,24 @@ function CreateGame() {
 
   // User will enter the GameRoom based on this state
   const [room, setRoom] = useState<string>("");
+  const [players, setPlayers] = useState<string[]>([]);
 
   const { address } = useAccount();
 
   // pass room code to backend
   const joinRandomRoom = () => {
-    socket.emit("joinRandomRoom");
+    socket.emit("joinRandomRoom", { address });
     setRoom(roomCode);
   };
 
   const joinPrivateRoom = () => {
     console.log("Joining room:", roomCode);
-    socket.emit("joinPrivateRoom", { roomId: roomCode });
+    socket.emit("joinPrivateRoom", { roomId: roomCode, address });
     setRoom(roomCode);
   };
 
   const createPrivateRoom = () => {
-    socket.emit("createPrivateRoom");
+    socket.emit("createPrivateRoom", { address });
   };
 
   // Listen for the 'roomCreated' event
@@ -47,8 +48,10 @@ function CreateGame() {
     // 'data' is the object that the server sent, which includes the roomId
     const roomId = data.roomId;
     setRoom(roomId);
+    setPlayers(data.players);
 
     console.log("Joined room:", roomId);
+    console.log("Players", data.players);
     setRoomCode(roomId);
 
     // Now you can use roomId as needed
@@ -66,7 +69,7 @@ function CreateGame() {
     <>
       <main className="outer-container">
         {room ? (
-          <GameRoom room={room} />
+          <GameRoom room={room} players={players} />
         ) : (
           <>
             <div className="page-title">YOU BET YOUR LIFE</div>
