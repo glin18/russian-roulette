@@ -32,7 +32,7 @@ function CreateGame() {
   return (
     <main className="outer-container">
       {roomCode ? (
-        <GameRoom />
+        <GameRoom room={roomCode} />
       ) : (
         <>
           <div className="page-title">YOU BET YOUR LIFE</div>
