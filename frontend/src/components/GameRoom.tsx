@@ -1,6 +1,9 @@
 import Revolver from "../assets/revolver.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GamerDetails from "./GamerDetails";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3001");
 
 function GameRoom(props: {
   room: string;
@@ -60,9 +63,15 @@ function GameRoom(props: {
           gamerNumber={1}
         />
       </div>
-      <div className="leave" onClick={props.leaveRoom}>
-        LEAVE
-      </div>
+
+      {/* {props.players.map((player, index) => (
+        <GamerDetails
+          address={player}
+          shot={false}
+          died={false}
+          gamerNumber={index}
+        />
+      ))} */}
     </div>
   );
 }
