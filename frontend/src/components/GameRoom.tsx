@@ -9,32 +9,62 @@ function GameRoom(props: { room: string; players: string[] }) {
       <div>GameRoom: {props.room}</div>
       <div>Round: 1</div>
       <div>Bet Pool: 0.001 ETH</div>
-      <div className="game-room-core">
-        <div
-          className="action-button"
-          onClick={() => {
-            setRotating(true);
-            setTimeout(() => setRotating(false), 4000);
-          }}
-        >
-          SPIN
-        </div>
-        <img
-          src={Revolver}
-          alt="revolver"
-          className={rotating ? "rotatingImage" : ""}
+      <div>Players: {props.players.length}/4</div>
+      <div>Waiting for {4 - props.players.length} more players...</div>
+      <div className="game-room-row">
+        <GamerDetails
+          address={props.players[0]}
+          shot={false}
+          died={false}
+          gamerNumber={1}
         />
-        <div className="action-button">FIRE</div>
+        <div className="game-room-column">
+          <GamerDetails
+            address={props.players[1] || "WAITING"}
+            shot={false}
+            died={false}
+            gamerNumber={1}
+          />
+          <div className="game-room-core">
+            <div
+              className="action-button"
+              onClick={() => {
+                setRotating(true);
+                setTimeout(() => setRotating(false), 4000);
+              }}
+            >
+              SPIN
+            </div>
+            <img
+              src={Revolver}
+              alt="revolver"
+              className={rotating ? "rotatingImage" : ""}
+            />
+            <div className="action-button">FIRE</div>
+          </div>
+          <GamerDetails
+            address={props.players[2] || "WAITING"}
+            shot={false}
+            died={false}
+            gamerNumber={1}
+          />
+        </div>
+        <GamerDetails
+          address={props.players[3] || "WAITING"}
+          shot={false}
+          died={false}
+          gamerNumber={1}
+        />
       </div>
 
-      {props.players.map((player, index) => (
+      {/* {props.players.map((player, index) => (
         <GamerDetails
           address={player}
           shot={false}
           died={false}
           gamerNumber={index}
         />
-      ))}
+      ))} */}
     </div>
   );
 }

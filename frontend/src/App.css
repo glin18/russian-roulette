@@ -158,14 +158,29 @@ body {
 
 /* Game Room */
 .game-room-container img {
-  width: 30%;
-  height: 30%;
+  width: 300px;
+  height: 300px;
 }
 
 .game-room-core {
   display: flex;
   justify-content: center;
   align-items: end;
+}
+
+.game-room-column {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.game-room-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
 
 .action-button {
@@ -198,10 +213,15 @@ a {
   text-decoration: none;
 }
 
+.a-disable {
+  pointer-events: none;
+}
+
 .gamer-address {
   font-weight: 600;
   cursor: pointer;
   transition: text-shadow 0.1s ease-in-out;
+  white-space: nowrap;
 }
 
 .gamer-address:hover {
