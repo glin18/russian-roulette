@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
     const roomIds = Object.keys(publicRooms);
 
     // Look for a room that isn't full (less than 4 players)
-    let room = roomIds.find((roomId) => publicRooms[roomId].length < 4);
+    let room = roomIds.find((roomId) => publicRooms[roomId]?.length < 4);
 
     if (!room) {
       // If no available room, create a new one
@@ -87,7 +87,7 @@ io.on("connection", (socket) => {
     console.log("Created private room:", room, "with player:", data.address);
 
     // Emit a 'roomCreated' event back to the client, including the room ID
-    socket.emit("roomCreated", { roomId: room });
+    socket.emit("roomCreated", { roomId: room, players: privateRooms[room] });
   });
 
   socket.on("joinPrivateRoom", (data) => {
