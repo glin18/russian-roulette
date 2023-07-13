@@ -37,6 +37,7 @@ function CreateGame() {
     // 'data' is the object that the server sent, which includes the roomId
     const roomId = data.roomId;
     setRoom(roomId);
+    setPlayers(data.players);
 
     console.log("roomCreated, Joined room:", roomId);
 
