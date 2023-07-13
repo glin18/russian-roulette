@@ -146,6 +146,7 @@ body {
   -moz-appearance: none;
   appearance: none;
   font-weight: 600;
+  width: 200px;
 }
 
 .join {

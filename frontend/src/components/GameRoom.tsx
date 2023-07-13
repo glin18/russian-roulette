@@ -2,7 +2,11 @@ import Revolver from "../assets/revolver.png";
 import { useState } from "react";
 import GamerDetails from "./GamerDetails";
 
-function GameRoom(props: { room: string; players: string[] }) {
+function GameRoom(props: {
+  room: string;
+  players: string[];
+  leaveRoom: () => void;
+}) {
   const [rotating, setRotating] = useState<boolean>(false);
   return (
     <div className="game-room-container">
@@ -56,15 +60,9 @@ function GameRoom(props: { room: string; players: string[] }) {
           gamerNumber={1}
         />
       </div>
-      <div className="leave">LEAVE</div>
-      {/* {props.players.map((player, index) => (
-        <GamerDetails
-          address={player}
-          shot={false}
-          died={false}
-          gamerNumber={index}
-        />
-      ))} */}
+      <div className="leave" onClick={props.leaveRoom}>
+        LEAVE
+      </div>
     </div>
   );
 }

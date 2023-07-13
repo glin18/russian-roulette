@@ -144,6 +144,7 @@ io.on("connection", (socket) => {
     console.log("Data received:", data);
 
     let room = data.roomId;
+    let currentPlayers;
     console.log(`Attempting to leave room: ${room}`);
 
     // If the player is in a public room...
@@ -153,9 +154,10 @@ io.on("connection", (socket) => {
       );
       // Remove the player from the room
       publicRooms[room] = publicRooms[room].filter(
-        (player) => player !== socket.id
+        (player) => player !== playerData[socket.id].address
       );
       console.log(`Player ${socket.id} removed from public room ${room}.`);
+      currentPlayers = publicRooms[room];
 
       // If there are no more players in the room, delete the room
       if (publicRooms[room].length === 0) {
@@ -169,9 +171,10 @@ io.on("connection", (socket) => {
       );
       // Remove the player from the room
       privateRooms[room] = privateRooms[room].filter(
-        (player) => player !== socket.id
+        (player) => player !== playerData[socket.id].address
       );
       console.log(`Player ${socket.id} removed from private room ${room}.`);
+      currentPlayers = privateRooms[room];
 
       // If there are no more players in the room, delete the room
       if (privateRooms[room].length === 0) {
@@ -182,13 +185,16 @@ io.on("connection", (socket) => {
     } else {
       console.log(`Player ${socket.id} is not in room ${room}.`);
     }
+    console.log(currentPlayers);
+
+    delete playerData[socket.id];
 
     // Make the socket leave the room
     socket.leave(room);
     console.log(`Player ${socket.id} left room ${room}.`);
 
     // Emit a 'roomLeft' event back to the client, including the room ID
-    io.emit("roomLeft", { roomId: room });
+    io.in(room).emit("roomLeft", { roomId: room, players: currentPlayers });
     console.log(
       `Sent roomLeft event to player ${socket.id} with room ID ${room}.`
     );

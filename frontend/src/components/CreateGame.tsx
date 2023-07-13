@@ -25,11 +25,17 @@ function CreateGame() {
   const joinPrivateRoom = () => {
     console.log("Joining room:", roomCode);
     socket.emit("joinPrivateRoom", { roomId: roomCode, address });
-    setRoom(roomCode);
+    // setRoom(roomCode);
   };
 
   const createPrivateRoom = () => {
     socket.emit("createPrivateRoom", { address });
+  };
+
+  const leaveRoom = () => {
+    socket.emit("leaveRoom", { roomId: room });
+    console.log("ROOMCODE", room);
+    setRoom("");
   };
 
   // Listen for the 'roomCreated' event
@@ -61,6 +67,10 @@ function CreateGame() {
     // Now you can use roomId as needed
   });
 
+  socket.on("roomLeft", (data) => {
+    setPlayers(data.players);
+  });
+
   const onClickCreate = () => {
     setShowModal(true);
   };
@@ -73,7 +83,7 @@ function CreateGame() {
     <>
       <main className="outer-container">
         {room ? (
-          <GameRoom room={room} players={players} />
+          <GameRoom room={room} players={players} leaveRoom={leaveRoom} />
         ) : (
           <>
             <div className="page-title">YOU BET YOUR LIFE</div>
@@ -100,12 +110,12 @@ function CreateGame() {
                     AUTO MATCH
                   </div>
                   <div className="body-button" onClick={createPrivateRoom}>
-                    INVITE WITH CODE
+                    CREATE PRIVATE ROOM
                   </div>
                   <div className="room-code">
                     <input
                       type="text"
-                      placeholder="Enter room code..."
+                      placeholder="Enter private room code..."
                       value={roomCode}
                       onChange={(e) => setRoomCode(e.target.value)}
                     />
