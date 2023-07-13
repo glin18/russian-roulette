@@ -56,7 +56,7 @@ function GameRoom(props: { room: string; players: string[] }) {
           gamerNumber={1}
         />
       </div>
-
+      <div className="leave">LEAVE</div>
       {/* {props.players.map((player, index) => (
         <GamerDetails
           address={player}
