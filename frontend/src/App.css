@@ -240,3 +240,11 @@ a {
   background-color: #ffc700;
   cursor: pointer;
 }
+
+/* FireMan */
+.fire-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}

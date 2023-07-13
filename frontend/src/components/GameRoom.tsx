@@ -1,6 +1,7 @@
 import Revolver from "../assets/revolver.png";
 import { useState } from "react";
 import GamerDetails from "./GamerDetails";
+import fireMan from "../assets/firePopMan.png";
 
 function GameRoom(props: {
   room: string;
@@ -8,6 +9,16 @@ function GameRoom(props: {
   leaveRoom: () => void;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
+  const [fire, setFire] = useState<boolean>(false);
+
+  if (fire) {
+    return (
+      <div className="fire-container">
+        <img src={fireMan}></img>
+      </div>
+    );
+  }
+
   return (
     <div className="game-room-container">
       <div>GameRoom: {props.room}</div>
@@ -44,7 +55,15 @@ function GameRoom(props: {
               alt="revolver"
               className={rotating ? "rotatingImage" : ""}
             />
-            <div className="action-button">FIRE</div>
+            <div
+              className="action-button"
+              onClick={() => {
+                setFire(true);
+                setTimeout(() => setFire(false), 4000);
+              }}
+            >
+              FIRE
+            </div>
           </div>
           <GamerDetails
             address={props.players[2] || "WAITING"}
