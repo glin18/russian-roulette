@@ -101,6 +101,9 @@ function GameRoom(props: {
               gamerNumber={4}
             />
           </div>
+          <div className="leave" onClick={props.leaveRoom}>
+            LEAVE
+          </div>
 
           {/* {props.players.map((player, index) => (
         <GamerDetails
