@@ -38,7 +38,7 @@ function GameRoom(props: {
             address={props.players[1] || "WAITING"}
             shot={false}
             died={false}
-            gamerNumber={1}
+            gamerNumber={2}
           />
           <div className="game-room-core">
             <div
@@ -69,14 +69,14 @@ function GameRoom(props: {
             address={props.players[2] || "WAITING"}
             shot={false}
             died={false}
-            gamerNumber={1}
+            gamerNumber={3}
           />
         </div>
         <GamerDetails
           address={props.players[3] || "WAITING"}
           shot={false}
           died={false}
-          gamerNumber={1}
+          gamerNumber={4}
         />
       </div>
       <div className="leave" onClick={props.leaveRoom}>

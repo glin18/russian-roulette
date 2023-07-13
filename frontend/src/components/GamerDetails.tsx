@@ -1,3 +1,5 @@
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+
 function GamerDetails(props: {
   address: string;
   died: boolean;
@@ -6,6 +8,10 @@ function GamerDetails(props: {
 }) {
   return (
     <div>
+      {props.address !== "WAITING" && (
+        // @ts-ignore
+        <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+      )}
       <div className="gamer-address">
         <a
           href={"https://etherscan.io/address/" + props.address}
