@@ -1,5 +1,6 @@
 import Revolver from "../assets/revolver.png";
 import { useState } from "react";
+import GamerDetails from "./GamerDetails";
 
 function GameRoom(props: { room: string; players: string[] }) {
   const [rotating, setRotating] = useState<boolean>(false);
@@ -26,8 +27,13 @@ function GameRoom(props: { room: string; players: string[] }) {
         <div className="action-button">FIRE</div>
       </div>
 
-      {props.players.map((player) => (
-        <div key={Math.random()}>{player}</div>
+      {props.players.map((player, index) => (
+        <GamerDetails
+          address={player}
+          shot={false}
+          died={false}
+          gamerNumber={index}
+        />
       ))}
     </div>
   );
