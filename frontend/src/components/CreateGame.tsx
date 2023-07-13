@@ -48,12 +48,15 @@ function CreateGame() {
   socket.on("joinedRoom", (data) => {
     // 'data' is the object that the server sent, which includes the roomId
     const roomId = data.roomId;
-    setRoom(roomId);
+    if (data.socketID === socket.id) {
+      setRoom(roomId);
+    }
     setPlayers(data.players);
+    console.log(data.players);
 
     console.log("Joined room:", roomId);
     console.log("Players", data.players);
-    setRoomCode(roomId);
+    // setRoomCode(roomId);
 
     // Now you can use roomId as needed
   });

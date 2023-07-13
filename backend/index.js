@@ -65,7 +65,11 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     // Notify the client they have successfully joined the room
-    socket.emit("joinedRoom", { roomId: room, players: publicRooms[room] });
+    io.emit("joinedRoom", {
+      roomId: room,
+      players: publicRooms[room],
+      socketID: socket.id,
+    });
     console.log("Notified player about joined room:", room);
   });
 
@@ -125,7 +129,11 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log(`Player ${data.address} joined room ${room}.`);
 
-    socket.emit("joinedRoom", { roomId: room });
+    io.emit("joinedRoom", {
+      roomId: room,
+      players: privateRooms[room],
+      socketID: socket.id,
+    });
     console.log(
       `Sent joinedRoom event to player ${data.address} with room ID ${room}.`
     );
@@ -180,7 +188,7 @@ io.on("connection", (socket) => {
     console.log(`Player ${socket.id} left room ${room}.`);
 
     // Emit a 'roomLeft' event back to the client, including the room ID
-    socket.emit("roomLeft", { roomId: room });
+    io.emit("roomLeft", { roomId: room });
     console.log(
       `Sent roomLeft event to player ${socket.id} with room ID ${room}.`
     );
