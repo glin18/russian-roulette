@@ -53,10 +53,9 @@ function CreateGame() {
   // Listen for the 'joinedRoom' event
   socket.on("joinedRoom", (data) => {
     // 'data' is the object that the server sent, which includes the roomId
+    console.log("joinedRoom", data);
     const roomId = data.roomId;
-    if (data.socketID === socket.id) {
-      setRoom(roomId);
-    }
+    setRoom(roomId);
     setPlayers(data.players);
     console.log(data.players);
 
