@@ -36,6 +36,7 @@ function CreateGame() {
     socket.emit("leaveRoom", { roomId: room });
     console.log("ROOMCODE", room);
     setRoom("");
+    setShowModal(false);
   };
 
   // Listen for the 'roomCreated' event
