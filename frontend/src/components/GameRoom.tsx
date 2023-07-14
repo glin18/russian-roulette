@@ -10,23 +10,16 @@ function GameRoom(props: {
   room: string;
   players: string[];
   leaveRoom: () => void;
+  socket: any;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
 
-  if (fire) {
-    return (
-      <div className="fire-container">
-        <img src={fireMan}></img>
-      </div>
-    );
-  }
-
   const [countdown, setCountdown] = useState(0);
   // Listen for the 'GameStarted' event
-  //   socket.on("gameStarted", (game) => {
-  //     console.log("gameStarted", game);
-  //   });
+  props.socket.on("gameStarted", (game: any) => {
+    console.log("gameStarted", game);
+  });
 
   useEffect(() => {
     if (props.players.length === 4) {
@@ -37,6 +30,15 @@ function GameRoom(props: {
       return () => clearInterval(intervalId);
     }
   }, [props.players]);
+
+  if (fire) {
+    return (
+      <div className="fire-container">
+        <img src={fireMan}></img>
+      </div>
+    );
+  }
+
   return (
     <>
       {countdown > 0 ? (
@@ -104,15 +106,6 @@ function GameRoom(props: {
           <div className="leave" onClick={props.leaveRoom}>
             LEAVE
           </div>
-
-          {/* {props.players.map((player, index) => (
-        <GamerDetails
-          address={player}
-          shot={false}
-          died={false}
-          gamerNumber={index}
-        />
-      ))} */}
         </div>
       )}
     </>
