@@ -14,15 +14,20 @@ function GameRoom(props: {
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
+  const [gameData, setGameData] = useState();
 
   const [countdown, setCountdown] = useState(0);
+
+  // const [gamesData, setGamesData] = useState();
+
   // Listen for the 'GameStarted' event
-  //   socket.on("gameStarted", (game) => {
-  //     console.log("gameStarted", game);
-  //   });
+  props.socket.on("gameStart", (data: any) => {
+    console.log("gameStarted", data);
+    setGameData(data);
+  });
 
   useEffect(() => {
-    if (props.players.length === 4) {
+    if (props.players.length === 3) {
       setCountdown(5);
       const intervalId = setInterval(() => {
         setCountdown((t) => t - 1);
@@ -36,6 +41,7 @@ function GameRoom(props: {
         <div>Game starting in: {countdown}</div>
       ) : (
         <div className="game-room-container">
+          {gameData && <div className="started">STARTED</div>}
           <div>GameRoom: {props.room}</div>
           <div>Round: 1</div>
           <div>Bet Pool: 0.001 ETH</div>

@@ -248,3 +248,9 @@ a {
   align-items: center;
   height: 50%;
 }
+
+/* Game Start */
+.started {
+  font-weight: 700;
+  font-size: 25px;
+}
