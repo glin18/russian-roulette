@@ -15,40 +15,21 @@ function GameRoom(props: {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
 
-  if (fire) {
-    return (
-      <div className="fire-container">
-        <img src={fireMan}></img>
-      </div>
-    );
-  }
-
   const [countdown, setCountdown] = useState(0);
   // Listen for the 'GameStarted' event
-    // props.socket.on("gameStarted", (game :any) => {
-    //   console.log("gameStarted", game);
-    // });
+  //   socket.on("gameStarted", (game) => {
+  //     console.log("gameStarted", game);
+  //   });
 
-    useEffect(() => {
-      if (props.players.length === 4) {
-        setCountdown(5);
-        const intervalId = setInterval(() => {
-          setCountdown((t) => {
-            if (t === 1) { // when the countdown reaches zero
-              // console.log("starting game", props.room)
-              // props.socket.emit("startGame", { roomId: props.room });
-              clearInterval(intervalId);
-            }
-            return t - 1;
-          });
-        }, 1000);
-    
-        // return a cleanup function without the emit
-        return () => {
-          clearInterval(intervalId);
-        };
-      }
-    }, [props.players]);
+  useEffect(() => {
+    if (props.players.length === 4) {
+      setCountdown(5);
+      const intervalId = setInterval(() => {
+        setCountdown((t) => t - 1);
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [props.players]);
   return (
     <>
       {countdown > 0 ? (
@@ -116,15 +97,6 @@ function GameRoom(props: {
           <div className="leave" onClick={props.leaveRoom}>
             LEAVE
           </div>
-
-          {/* {props.players.map((player, index) => (
-        <GamerDetails
-          address={player}
-          shot={false}
-          died={false}
-          gamerNumber={index}
-        />
-      ))} */}
         </div>
       )}
     </>

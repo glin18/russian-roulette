@@ -36,6 +36,7 @@ function CreateGame() {
     socket.emit("leaveRoom", { roomId: room });
     console.log("ROOMCODE", room);
     setRoom("");
+    setShowModal(false);
   };
 
   // Listen for the 'roomCreated' event
@@ -82,14 +83,23 @@ function CreateGame() {
     <>
       <main className="outer-container">
         {room ? (
-          <GameRoom room={room} players={players} leaveRoom={leaveRoom} socket={socket}/>
+          <GameRoom
+            room={room}
+            players={players}
+            leaveRoom={leaveRoom}
+            socket={socket}
+          />
         ) : (
           <>
             <div className="page-title">YOU BET YOUR LIFE</div>
             <div className="inner-container">
-              <div className="create-game" onClick={onClickCreate}>
-                CREATE GAME ROOM
-              </div>
+              {address ? (
+                <div className="create-game" onClick={onClickCreate}>
+                  CREATE GAME ROOM
+                </div>
+              ) : (
+                <div>CONNECT YOUR WALLET!</div>
+              )}
               <img src={createGameImage} alt="create game image" />
 
               <div
