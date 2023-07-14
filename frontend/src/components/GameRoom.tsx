@@ -10,6 +10,7 @@ function GameRoom(props: {
   room: string;
   players: string[];
   leaveRoom: () => void;
+  socket: any;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
@@ -24,19 +25,30 @@ function GameRoom(props: {
 
   const [countdown, setCountdown] = useState(0);
   // Listen for the 'GameStarted' event
-  //   socket.on("gameStarted", (game) => {
-  //     console.log("gameStarted", game);
-  //   });
+    // props.socket.on("gameStarted", (game :any) => {
+    //   console.log("gameStarted", game);
+    // });
 
-  useEffect(() => {
-    if (props.players.length === 4) {
-      setCountdown(5);
-      const intervalId = setInterval(() => {
-        setCountdown((t) => t - 1);
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [props.players]);
+    useEffect(() => {
+      if (props.players.length === 4) {
+        setCountdown(5);
+        const intervalId = setInterval(() => {
+          setCountdown((t) => {
+            if (t === 1) { // when the countdown reaches zero
+              // console.log("starting game", props.room)
+              // props.socket.emit("startGame", { roomId: props.room });
+              clearInterval(intervalId);
+            }
+            return t - 1;
+          });
+        }, 1000);
+    
+        // return a cleanup function without the emit
+        return () => {
+          clearInterval(intervalId);
+        };
+      }
+    }, [props.players]);
   return (
     <>
       {countdown > 0 ? (

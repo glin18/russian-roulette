@@ -82,7 +82,7 @@ function CreateGame() {
     <>
       <main className="outer-container">
         {room ? (
-          <GameRoom room={room} players={players} leaveRoom={leaveRoom} />
+          <GameRoom room={room} players={players} leaveRoom={leaveRoom} socket={socket}/>
         ) : (
           <>
             <div className="page-title">YOU BET YOUR LIFE</div>

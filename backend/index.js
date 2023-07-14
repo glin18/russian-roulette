@@ -9,6 +9,7 @@ const server = http.createServer(app);
 const publicRooms = {};
 const privateRooms = {};
 const playerData = {};
+// const games = {};
 
 // type playerData = {
 //   socketId: {roomId: String, address: String}
@@ -53,6 +54,8 @@ io.on("connection", (socket) => {
       address: data.address,
       room: room,
       type: "Public",
+      shoot: false,
+      dead: false
     };
     console.log(
       "Added player to the room:",
@@ -65,7 +68,7 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     // Notify the client they have successfully joined the room
-    io.emit("joinedRoom", {
+    io.in(room).emit("joinedRoom", {
       roomId: room,
       players: publicRooms[room],
       socketID: socket.id,
@@ -214,22 +217,28 @@ io.on("connection", (socket) => {
     delete playerData[socket.id];
   });
 
-  //  // If the player is in a public room...
-  //  for (const room in publicRooms) {
-  //     if (publicRooms[room].includes(socket.id)) {
-  //         console.log(`Player ${socket.id} is in public room ${room}. Removing player from room.`);
-  //         // Remove the player from the room
-  //         publicRooms[room] = publicRooms[room].filter((player) => player !== socket.id);
-  //         console.log(`Player ${socket.id} removed from public room ${room}.`);
+//   socket.on("startGame", ({ roomId }) => {
+//     console.log(socket.id, "started game in room", roomId);
+//     // Get the room type from playerData
+//     let roomType = playerData[socket.id].type;
 
-  //         // If there are no more players in the room, delete the room
-  //         if (publicRooms[room].length === 0) {
-  //         console.log(`Room ${room} is empty. Deleting room.`);
-  //         delete publicRooms[room];
-  //         console.log(`Room ${room} deleted.`);
-  //         }
-  //     }
-  //     }
+//     let playersInRoom = roomType === 'Public' ? publicRooms[roomId] : privateRooms[roomId];
+
+//     // Assume roomId is valid and room is full
+//     let game = {
+//       gameId: roomId,
+//       players: playersInRoom,
+//       gameState: {
+//         currentTurn: 0, // Index of the player whose turn it is
+//         playersAlive: [true, true, true, true], // All players start off alive
+//         playersShot: [false, false, false, false], // Nobody has shot yet
+//       },
+//     };
+
+//     games[game.gameId] = game;
+
+//     socket.emit("gameStarted", game);
+//   });
 });
 
 server.listen(3001, () => {
