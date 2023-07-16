@@ -1,6 +1,7 @@
 import Revolver from "../assets/revolver.png";
 import { useState, useEffect } from "react";
 import GamerDetails from "./GamerDetails";
+import ChatRoom from "./ChatRoom";
 import fireMan from "../assets/firePopMan.png";
 // import { io } from "socket.io-client";
 
@@ -41,6 +42,7 @@ function GameRoom(props: {
           <div>Bet Pool: 0.001 ETH</div>
           <div>Players: {props.players.length}/4</div>
           <div>Waiting for {4 - props.players.length} more players...</div>
+            <ChatRoom socket={props.socket} room={props.room}/>
           <div className="game-room-row">
             <GamerDetails
               address={props.players[0]}
@@ -101,7 +103,7 @@ function GameRoom(props: {
               socket={props.socket}
               room={props.room}
             />
-          </div>
+          ChatRoom</div>
           <div className="leave" onClick={props.leaveRoom}>
             LEAVE
           </div>
