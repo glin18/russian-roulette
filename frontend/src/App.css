@@ -194,6 +194,12 @@ body {
   cursor: pointer;
 }
 
+.game-room-container .emojiImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 80%;
+}
+
 @keyframes rotating {
   0% {
     transform: rotate(0deg);
@@ -247,4 +253,34 @@ a {
   justify-content: center;
   align-items: center;
   height: 50%;
+}
+
+/* Emoji */
+
+.hoverIcon {
+  transition: all 0.2s ease-in-out;
+  color: #ffffff; 
+}
+
+.hoverIcon:hover {
+  transform: scale(1.2); 
+  color: rgb(0, 115, 255); 
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.emoji-grid img {
+  max-width: 100%; 
+  max-height: 100px; 
+  object-fit: contain; 
+  border-radius: 80%; 
+  transition: transform 0.3s ease-in-out; 
+}
+
+.emoji-grid img:hover {
+  transform: scale(1.1); 
 }

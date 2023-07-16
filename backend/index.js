@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
       room: room,
       type: "Public",
       shoot: false,
-      dead: false
+      dead: false,
     };
     console.log(
       "Added player to the room:",
@@ -217,28 +217,33 @@ io.on("connection", (socket) => {
     delete playerData[socket.id];
   });
 
-//   socket.on("startGame", ({ roomId }) => {
-//     console.log(socket.id, "started game in room", roomId);
-//     // Get the room type from playerData
-//     let roomType = playerData[socket.id].type;
+  //   socket.on("startGame", ({ roomId }) => {
+  //     console.log(socket.id, "started game in room", roomId);
+  //     // Get the room type from playerData
+  //     let roomType = playerData[socket.id].type;
 
-//     let playersInRoom = roomType === 'Public' ? publicRooms[roomId] : privateRooms[roomId];
+  //     let playersInRoom = roomType === 'Public' ? publicRooms[roomId] : privateRooms[roomId];
 
-//     // Assume roomId is valid and room is full
-//     let game = {
-//       gameId: roomId,
-//       players: playersInRoom,
-//       gameState: {
-//         currentTurn: 0, // Index of the player whose turn it is
-//         playersAlive: [true, true, true, true], // All players start off alive
-//         playersShot: [false, false, false, false], // Nobody has shot yet
-//       },
-//     };
+  //     // Assume roomId is valid and room is full
+  //     let game = {
+  //       gameId: roomId,
+  //       players: playersInRoom,
+  //       gameState: {
+  //         currentTurn: 0, // Index of the player whose turn it is
+  //         playersAlive: [true, true, true, true], // All players start off alive
+  //         playersShot: [false, false, false, false], // Nobody has shot yet
+  //       },
+  //     };
 
-//     games[game.gameId] = game;
+  //     games[game.gameId] = game;
 
-//     socket.emit("gameStarted", game);
-//   });
+  //     socket.emit("gameStarted", game);
+  //   });
+  socket.on("emojiClicked", ({ emojiName, roomId, address }) => {
+    console.log("emojiClicked event received from:", socket.id + " " + emojiName + " " + roomId);
+    // Broadcast the emoji name to all users in the room
+    io.to(roomId).emit("displayEmoji", emojiName, address);
+  });
 });
 
 server.listen(3001, () => {

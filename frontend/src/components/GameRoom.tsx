@@ -47,6 +47,8 @@ function GameRoom(props: {
               shot={false}
               died={false}
               gamerNumber={1}
+              socket={props.socket}
+              room={props.room}
             />
             <div className="game-room-column">
               <GamerDetails
@@ -54,6 +56,8 @@ function GameRoom(props: {
                 shot={false}
                 died={false}
                 gamerNumber={2}
+                socket={props.socket}
+                room={props.room}
               />
               <div className="game-room-core">
                 <div
@@ -85,6 +89,8 @@ function GameRoom(props: {
                 shot={false}
                 died={false}
                 gamerNumber={3}
+                socket={props.socket}
+                room={props.room}
               />
             </div>
             <GamerDetails
@@ -92,6 +98,8 @@ function GameRoom(props: {
               shot={false}
               died={false}
               gamerNumber={4}
+              socket={props.socket}
+              room={props.room}
             />
           </div>
           <div className="leave" onClick={props.leaveRoom}>
