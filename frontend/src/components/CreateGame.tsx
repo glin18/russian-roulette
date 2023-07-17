@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import GameRoom from "./GameRoom";
+import openDoor from "../assets/audio/openDoor.mp3";
 
 
 const socket = io("http://localhost:3001");
@@ -17,23 +18,29 @@ function CreateGame() {
 
   const { address } = useAccount();
 
+  const openDoorAudio = new Audio(openDoor);
+
   // pass room code to backend
   const joinRandomRoom = () => {
+    openDoorAudio.play();
     socket.emit("joinRandomRoom", { address });
     setRoom(roomCode);
   };
 
   const joinPrivateRoom = () => {
+    openDoorAudio.play();
     console.log("Joining room:", roomCode);
     socket.emit("joinPrivateRoom", { roomId: roomCode, address });
     // setRoom(roomCode);
   };
 
   const createPrivateRoom = () => {
+    openDoorAudio.play();
     socket.emit("createPrivateRoom", { address });
   };
 
   const leaveRoom = () => {
+    openDoorAudio.play();
     socket.emit("leaveRoom", { roomId: room });
     console.log("ROOMCODE", room);
     setRoom("");
@@ -54,6 +61,7 @@ function CreateGame() {
 
   // Listen for the 'joinedRoom' event
   socket.on("joinedRoom", (data) => {
+    openDoorAudio.play();
     // 'data' is the object that the server sent, which includes the roomId
     console.log("joinedRoom", data);
     const roomId = data.roomId;
@@ -69,6 +77,7 @@ function CreateGame() {
   });
 
   socket.on("roomLeft", (data) => {
+    openDoorAudio.play();
     setPlayers(data.players);
   });
 

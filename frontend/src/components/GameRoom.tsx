@@ -47,13 +47,13 @@ function GameRoom(props: {
   }
 
   // Create a new audio object
-  const audio = new Audio(spin);
+  const spinAudio = new Audio(spin);
 
   // Function to handle spinning and playing sound
   const handleSpin = () => {
     setRotating(true);
     if (!rotating) {
-      audio.play();
+      spinAudio.play();
     }
     setTimeout(() => {
       setRotating(false);
