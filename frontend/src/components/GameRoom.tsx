@@ -12,12 +12,13 @@ function GameRoom(props: {
   players: string[];
   leaveRoom: () => void;
   socket: any;
+  address: string;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
-  const [gameData, setGameData] = useState();
+  const [gameData, setGameData] = useState<any>();
 
-  const [countdown, setCountdown] = useState(0);
+  const [countdown, setCountdown] = useState<number>(0);
 
   // const [gamesData, setGamesData] = useState();
 
@@ -37,6 +38,18 @@ function GameRoom(props: {
     }
   }, [props.players]);
 
+  const onClickFire = () => {
+    setFire(true);
+    console.log(gameData);
+    props.socket.emit("fired", props.room);
+    setTimeout(() => setFire(false), 4000);
+  };
+
+  props.socket.on("fired", (data: any) => {
+    console.log("fired data received");
+    setGameData(data);
+  });
+
   if (fire) {
     return (
       <div className="fire-container">
@@ -51,7 +64,11 @@ function GameRoom(props: {
         <div>Game starting in: {countdown}</div>
       ) : (
         <div className="game-room-container">
-          {gameData && <div className="started">STARTED</div>}
+          {gameData && (
+            <div className="started">
+              STARTED! CURRENT TURN: GAMER {gameData["currentTurn"] + 1}
+            </div>
+          )}
           <div>GameRoom: {props.room}</div>
           <div>Round: 1</div>
           <div>Bet Pool: 0.001 ETH</div>
@@ -63,8 +80,8 @@ function GameRoom(props: {
             <div className="game-room-row">
               <GamerDetails
                 address={props.players[0]}
-                shot={false}
-                died={false}
+                shot={gameData && gameData["currentTurn"] > 0}
+                died={gameData && !gameData["playersAlive"][0]}
                 gamerNumber={1}
                 socket={props.socket}
                 room={props.room}
@@ -72,8 +89,8 @@ function GameRoom(props: {
               <div className="game-room-column">
                 <GamerDetails
                   address={props.players[1] || "WAITING"}
-                  shot={false}
-                  died={false}
+                  shot={gameData && gameData["currentTurn"] > 1}
+                  died={gameData && !gameData["playersAlive"][1]}
                   gamerNumber={2}
                   socket={props.socket}
                   room={props.room}
@@ -93,20 +110,14 @@ function GameRoom(props: {
                     alt="revolver"
                     className={rotating ? "rotatingImage" : ""}
                   />
-                  <div
-                    className="action-button"
-                    onClick={() => {
-                      setFire(true);
-                      setTimeout(() => setFire(false), 4000);
-                    }}
-                  >
+                  <div className="action-button" onClick={onClickFire}>
                     FIRE
                   </div>
                 </div>
                 <GamerDetails
                   address={props.players[2] || "WAITING"}
-                  shot={false}
-                  died={false}
+                  shot={gameData && gameData["currentTurn"] > 2}
+                  died={gameData && !gameData["playersAlive"][2]}
                   gamerNumber={3}
                   socket={props.socket}
                   room={props.room}
@@ -115,7 +126,7 @@ function GameRoom(props: {
               <GamerDetails
                 address={props.players[3] || "WAITING"}
                 shot={false}
-                died={false}
+                died={gameData && !gameData["playersAlive"][3]}
                 gamerNumber={4}
                 socket={props.socket}
                 room={props.room}

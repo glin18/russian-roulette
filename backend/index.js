@@ -77,6 +77,7 @@ io.on("connection", (socket) => {
     if (publicRooms[room].length === 3) {
       gamesData[room] = {
         players: publicRooms[room],
+        room: room,
         currentTurn: 0, // Index of the player whose turn it is
         playersAlive: [true, true, true, true], // All players start off alive
         playersShot: [false, false, false, false], // Nobody has shot yet
@@ -226,6 +227,24 @@ io.on("connection", (socket) => {
       ]?.filter((address) => address != playerData[socket.id].address);
     }
     delete playerData[socket.id];
+  });
+
+  socket.on("fired", (room) => {
+    let alive = true;
+    console.log(room);
+    console.log("GAMEDATA", gamesData[String(room)]);
+
+    if (Math.floor(Math.random() * 6) + 1 >= 4) {
+      console.log("PLAYER DEAD");
+      alive = false;
+      gamesData[String(room)]["playersAlive"][
+        gamesData[String(room)]["currentTurn"]
+      ] = false;
+    }
+    gamesData[String(room)]["currentTurn"] =
+      (gamesData[String(room)]["currentTurn"] + 1) % 4;
+    console.log("GAMEDATA", gamesData[String(room)]);
+    io.in(room).emit("fired", gamesData[String(room)]);
   });
 
   //   socket.on("startGame", ({ roomId }) => {

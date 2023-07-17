@@ -88,6 +88,7 @@ function CreateGame() {
             players={players}
             leaveRoom={leaveRoom}
             socket={socket}
+            address={String(address)}
           />
         ) : (
           <>
