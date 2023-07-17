@@ -15,6 +15,7 @@ function GameRoom(props: {
   players: string[];
   leaveRoom: () => void;
   socket: any;
+  isMuted: boolean;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
@@ -56,7 +57,7 @@ function GameRoom(props: {
   // Function to handle spinning and playing sound
   const handleSpin = () => {
     setRotating(true);
-    if (!rotating) {
+    if (!rotating && !props.isMuted) {
       spinAudio.play();
     }
     setTimeout(() => {
@@ -65,19 +66,21 @@ function GameRoom(props: {
   };
 
   const handleFire = () => {
-
     setFire(true);
-    loadedAudio.play();
+    if (!props.isMuted) {
+      loadedAudio.play();
+    }
     // after loadedAudio finish then play gunshoot audio
-    setTimeout(() => {     
-      gunShootAudio.play();
+    setTimeout(() => {
+      if (!props.isMuted) {
+        gunShootAudio.play();
+      }
     }, 1000);
     // after gunshoot audio finish then set fire to false
     setTimeout(() => {
       setFire(false);
     }, 3000);
   };
-
 
   return (
     <>
