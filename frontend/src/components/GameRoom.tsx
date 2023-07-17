@@ -31,6 +31,15 @@ function GameRoom(props: {
       return () => clearInterval(intervalId);
     }
   }, [props.players]);
+
+  if (fire) {
+    return (
+      <div className="fire-container">
+        <img src={fireMan} alt="fireman" />
+      </div>
+    );
+  }
+
   return (
     <>
       {countdown > 0 ? (
