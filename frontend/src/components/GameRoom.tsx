@@ -64,18 +64,23 @@ function GameRoom(props: {
         <div>Game starting in: {countdown}</div>
       ) : (
         <div className="game-room-container">
-          {gameData && (
-            <div className="started">
-              STARTED! CURRENT TURN: GAMER {gameData["currentTurn"] + 1}
-            </div>
-          )}
-          <div>GameRoom: {props.room}</div>
-          <div>Round: 1</div>
-          <div>Bet Pool: 0.001 ETH</div>
-          <div>Players: {props.players.length}/4</div>
-          <div>Waiting for {4 - props.players.length} more players...</div>
           <div className="game-room-inner-container">
-            <ChatRoom socket={props.socket} room={props.room} />
+            <div className="chat-window">
+              {gameData && (
+                <>
+                  <div className="started">STARTED!</div>
+                  <div className="started">
+                    CURRENT TURN: GAMER
+                    {gameData["currentTurn"] + 1}
+                  </div>
+                </>
+              )}
+              <div>GameRoom: {props.room}</div>
+              <div>Round: 1</div>
+              <div>Bet Pool: 0.001 ETH</div>
+              <div>Players: {props.players.length}/4</div>
+              <div>Waiting for {4 - props.players.length} more players...</div>
+            </div>
 
             <div className="game-room-row">
               <GamerDetails
@@ -132,7 +137,7 @@ function GameRoom(props: {
                 room={props.room}
               />
             </div>
-            <div className="chat-window"></div>
+            <ChatRoom socket={props.socket} room={props.room} />
           </div>
 
           <div className="leave" onClick={props.leaveRoom}>

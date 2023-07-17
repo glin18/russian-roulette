@@ -270,6 +270,7 @@ a {
 .started {
   font-weight: 700;
   font-size: 25px;
+  white-space: nowrap;
 }
 
 /* Emoji */
