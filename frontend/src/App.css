@@ -252,6 +252,12 @@ a {
   cursor: pointer;
 }
 
+.jazzicon-emoji {
+  display: flex;
+  padding: 10px 3px;
+  gap: 5px;
+}
+
 /* FireMan */
 .fire-container {
   display: flex;
@@ -266,10 +272,11 @@ a {
   transition: all 0.2s ease-in-out;
   color: #ffffff;
   margin: 8px;
+  transform: scaleX(-1);
 }
 
 .hoverIcon:hover {
-  transform: scale(1.2);
+  transform: scale(-1, 1.2);
   color: rgb(0, 115, 255);
 }
 

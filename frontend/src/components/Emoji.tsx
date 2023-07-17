@@ -79,19 +79,19 @@ const Emoji = (props: { socket: any; room: string; address: string }) => {
 
   return (
     <>
-      {currentEmoji.address === props.address && (
-        <img
-          className="emojiImage"
-          src={emojiMap[currentEmoji.name as keyof typeof emojiMap]}
-          alt={currentEmoji.name}
-        />
-      )}
-      {address === props.address && (
+      {address === props.address && !currentEmoji.name && (
         <Icon
           className="hoverIcon"
           width={30}
           icon="quill:chat"
           onClick={openModal}
+        />
+      )}
+      {currentEmoji.address === props.address && (
+        <img
+          className="emojiImage"
+          src={emojiMap[currentEmoji.name as keyof typeof emojiMap]}
+          alt={currentEmoji.name}
         />
       )}
 

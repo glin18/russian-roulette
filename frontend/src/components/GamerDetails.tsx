@@ -12,16 +12,14 @@ function GamerDetails(props: {
   return (
     <div>
       {props.address !== "WAITING" && (
-        // @ts-ignore
-        <>
-            <Emoji
-              socket={props.socket}
-              room={props.room}
-              address={props.address}
-            />
-          
+        <div className="jazzicon-emoji">
           <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
-        </>
+          <Emoji
+            socket={props.socket}
+            room={props.room}
+            address={props.address}
+          />
+        </div>
       )}
       <div className="gamer-address">
         <a
