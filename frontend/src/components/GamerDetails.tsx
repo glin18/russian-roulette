@@ -1,16 +1,25 @@
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import Emoji from "./Emoji";
 
 function GamerDetails(props: {
   address: string;
   died: boolean;
   shot: boolean;
   gamerNumber: Number;
+  socket: any;
+  room: string;
 }) {
   return (
     <div>
       {props.address !== "WAITING" && (
-        // @ts-ignore
-        <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+        <div className="jazzicon-emoji">
+          <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+          <Emoji
+            socket={props.socket}
+            room={props.room}
+            address={props.address}
+          />
+        </div>
       )}
       <div className="gamer-address">
         <a

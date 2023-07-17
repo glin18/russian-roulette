@@ -1,6 +1,7 @@
 import Revolver from "../assets/revolver.png";
 import { useState, useEffect } from "react";
 import GamerDetails from "./GamerDetails";
+import ChatRoom from "./ChatRoom";
 import fireMan from "../assets/firePopMan.png";
 // import { io } from "socket.io-client";
 
@@ -35,6 +36,15 @@ function GameRoom(props: {
       return () => clearInterval(intervalId);
     }
   }, [props.players]);
+
+  if (fire) {
+    return (
+      <div className="fire-container">
+        <img src={fireMan} alt="fireman" />
+      </div>
+    );
+  }
+
   return (
     <>
       {countdown > 0 ? (
@@ -47,59 +57,73 @@ function GameRoom(props: {
           <div>Bet Pool: 0.001 ETH</div>
           <div>Players: {props.players.length}/4</div>
           <div>Waiting for {4 - props.players.length} more players...</div>
-          <div className="game-room-row">
-            <GamerDetails
-              address={props.players[0]}
-              shot={false}
-              died={false}
-              gamerNumber={1}
-            />
-            <div className="game-room-column">
+          <div className="game-room-inner-container">
+            <ChatRoom socket={props.socket} room={props.room} />
+
+            <div className="game-room-row">
               <GamerDetails
-                address={props.players[1] || "WAITING"}
+                address={props.players[0]}
                 shot={false}
                 died={false}
-                gamerNumber={2}
+                gamerNumber={1}
+                socket={props.socket}
+                room={props.room}
               />
-              <div className="game-room-core">
-                <div
-                  className="action-button"
-                  onClick={() => {
-                    setRotating(true);
-                    setTimeout(() => setRotating(false), 4000);
-                  }}
-                >
-                  SPIN
-                </div>
-                <img
-                  src={Revolver}
-                  alt="revolver"
-                  className={rotating ? "rotatingImage" : ""}
+              <div className="game-room-column">
+                <GamerDetails
+                  address={props.players[1] || "WAITING"}
+                  shot={false}
+                  died={false}
+                  gamerNumber={2}
+                  socket={props.socket}
+                  room={props.room}
                 />
-                <div
-                  className="action-button"
-                  onClick={() => {
-                    setFire(true);
-                    setTimeout(() => setFire(false), 4000);
-                  }}
-                >
-                  FIRE
+                <div className="game-room-core">
+                  <div
+                    className="action-button"
+                    onClick={() => {
+                      setRotating(true);
+                      setTimeout(() => setRotating(false), 4000);
+                    }}
+                  >
+                    SPIN
+                  </div>
+                  <img
+                    src={Revolver}
+                    alt="revolver"
+                    className={rotating ? "rotatingImage" : ""}
+                  />
+                  <div
+                    className="action-button"
+                    onClick={() => {
+                      setFire(true);
+                      setTimeout(() => setFire(false), 4000);
+                    }}
+                  >
+                    FIRE
+                  </div>
                 </div>
+                <GamerDetails
+                  address={props.players[2] || "WAITING"}
+                  shot={false}
+                  died={false}
+                  gamerNumber={3}
+                  socket={props.socket}
+                  room={props.room}
+                />
               </div>
               <GamerDetails
-                address={props.players[2] || "WAITING"}
+                address={props.players[3] || "WAITING"}
                 shot={false}
                 died={false}
-                gamerNumber={3}
+                gamerNumber={4}
+                socket={props.socket}
+                room={props.room}
               />
             </div>
-            <GamerDetails
-              address={props.players[3] || "WAITING"}
-              shot={false}
-              died={false}
-              gamerNumber={4}
-            />
+            <div className="chat-window"></div>
           </div>
+
           <div className="leave" onClick={props.leaveRoom}>
             LEAVE
           </div>

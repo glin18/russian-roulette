@@ -250,6 +250,29 @@ io.on("connection", (socket) => {
 
   //     socket.emit("gameStarted", game);
   //   });
+  socket.on("emojiClicked", ({ emojiName, roomId, address }) => {
+    console.log(
+      "emojiClicked event received from:",
+      socket.id + " " + emojiName + " " + roomId
+    );
+    // Broadcast the emoji name to all users in the room
+    io.to(roomId).emit("displayEmoji", emojiName, address);
+  });
+
+  socket.on("send_message", (messageData) => {
+    console.log(
+      "chatMessage event received from:",
+      messageData.room +
+        " " +
+        messageData.address +
+        " " +
+        messageData.message +
+        " " +
+        messageData.time
+    );
+    // Broadcast the message to all users in the room
+    io.to(messageData.room).emit("receive_message", messageData);
+  });
 });
 
 server.listen(3001, () => {
