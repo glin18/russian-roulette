@@ -12,6 +12,7 @@ import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import bgm from "./assets/audio/bgm.mp3";
 
 const { chains, publicClient } = configureChains(
   [mainnet, polygon, optimism, arbitrum, zora],
@@ -47,6 +48,7 @@ function App() {
           })}
         >
           <Home />
+          <audio src={bgm} autoPlay loop />
         </RainbowKitProvider>
       </WagmiConfig>
     </>
