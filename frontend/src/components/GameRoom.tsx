@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import GamerDetails from "./GamerDetails";
 import ChatRoom from "./ChatRoom";
 import fireMan from "../assets/firePopMan.png";
+import spin from "../assets/audio/spin.mp3";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:3001");
@@ -45,6 +46,20 @@ function GameRoom(props: {
     );
   }
 
+  // Create a new audio object
+  const audio = new Audio(spin);
+
+  // Function to handle spinning and playing sound
+  const handleSpin = () => {
+    setRotating(true);
+    if (!rotating) {
+      audio.play();
+    }
+    setTimeout(() => {
+      setRotating(false);
+    }, 3000);
+  };
+
   return (
     <>
       {countdown > 0 ? (
@@ -82,8 +97,9 @@ function GameRoom(props: {
                   <div
                     className="action-button"
                     onClick={() => {
-                      setRotating(true);
-                      setTimeout(() => setRotating(false), 4000);
+                      handleSpin();
+                      // setRotating(true);
+                      // setTimeout(() => setRotating(false), 3000);
                     }}
                   >
                     SPIN
