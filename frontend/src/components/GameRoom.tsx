@@ -4,6 +4,8 @@ import GamerDetails from "./GamerDetails";
 import ChatRoom from "./ChatRoom";
 import fireMan from "../assets/firePopMan.png";
 import spin from "../assets/audio/spin.mp3";
+import gunShoot from "../assets/audio/gunShoot.mp3";
+import loaded from "../assets/audio/loaded.mp3";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:3001");
@@ -48,6 +50,8 @@ function GameRoom(props: {
 
   // Create a new audio object
   const spinAudio = new Audio(spin);
+  const gunShootAudio = new Audio(gunShoot);
+  const loadedAudio = new Audio(loaded);
 
   // Function to handle spinning and playing sound
   const handleSpin = () => {
@@ -59,6 +63,21 @@ function GameRoom(props: {
       setRotating(false);
     }, 3000);
   };
+
+  const handleFire = () => {
+
+    setFire(true);
+    loadedAudio.play();
+    // after loadedAudio finish then play gunshoot audio
+    setTimeout(() => {     
+      gunShootAudio.play();
+    }, 1000);
+    // after gunshoot audio finish then set fire to false
+    setTimeout(() => {
+      setFire(false);
+    }, 3000);
+  };
+
 
   return (
     <>
@@ -112,8 +131,9 @@ function GameRoom(props: {
                   <div
                     className="action-button"
                     onClick={() => {
-                      setFire(true);
-                      setTimeout(() => setFire(false), 4000);
+                      handleFire();
+                      // setFire(true);
+                      // setTimeout(() => setFire(false), 4000);
                     }}
                   >
                     FIRE
