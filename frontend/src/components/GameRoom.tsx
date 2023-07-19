@@ -110,6 +110,7 @@ function GameRoom(props: {
                   >
                     SPIN
                   </div>
+                  {/* {gameData && gameData["playersAlive"][gameData["currentTurn"]]} */}
                   <img
                     src={Revolver}
                     alt="revolver"
