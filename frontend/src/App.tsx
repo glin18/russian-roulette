@@ -8,13 +8,13 @@ import {
   RainbowKitProvider,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, publicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, zora],
+  [mainnet, polygon, optimism, arbitrum, zora, sepolia],
   [
     alchemyProvider({ apiKey: import.meta.env.VITE_ALCHEMY_ID || "" }),
     publicProvider(),
@@ -33,12 +33,12 @@ const wagmiConfig = createConfig({
   publicClient,
 });
 
-
 function App() {
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider
+          initialChain={sepolia}
           chains={chains}
           theme={darkTheme({
             accentColor: "#FFC700",

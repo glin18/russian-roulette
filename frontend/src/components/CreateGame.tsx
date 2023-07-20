@@ -1,11 +1,12 @@
 import createGameImage from "../assets/game.png";
-import { useAccount } from "wagmi";
+import { useAccount, usePrepareContractWrite, useContractWrite } from "wagmi";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import GameRoom from "./GameRoom";
 import openDoor from "../assets/audio/openDoor.mp3";
 import bgm from "../assets/audio/bgm.mp3";
 import { Icon } from "@iconify/react";
+import { RouletteVault } from "../../contracts/abis/RouletteVault";
 
 const socket = io("http://localhost:3001");
 
@@ -101,6 +102,28 @@ function CreateGame() {
     setShowModal(false);
   };
 
+  const { config: configBet } = usePrepareContractWrite({
+    address: import.meta.env.VITE_ROULETTEVAULT_CONTRACT || "" as `0x${string}`,
+    abi: RouletteVault,
+    functionName: "depositA",
+    value: BigInt(`${0.01 * 10 ** 18}`),
+  });
+
+  const { write: bet } = useContractWrite({
+    ...configBet,
+    onError(error, variables, context) {
+      console.log("onError", error, variables, context);
+    },
+    onSuccess(data, variables, context) {
+      console.log("onSuccess", data, variables, context);
+    },
+  });
+
+  const onClickBet = () => {
+    setShowModal(false);
+    bet?.();
+  };
+
   // useref to avoid re-rendering the audio element
   const bgmAudio = useRef(new Audio(bgm));
   const openDoorAudio = useRef(new Audio(openDoor));
@@ -166,7 +189,9 @@ function CreateGame() {
                 <div className="modal-content">
                   <div className="modal-content-header">
                     <div style={{ visibility: "hidden" }}> &times;</div>
-                    <div className="bet-button">Bet 0.001 ETH</div>
+                    <div className="bet-button" onClick={onClickBet}>
+                      Bet 0.01 ETH
+                    </div>
                     <span className="close" onClick={onClickClose}>
                       &times;
                     </span>
