@@ -214,7 +214,8 @@ body {
   }
 }
 .rotatingImage {
-  animation: rotating 0.4s linear infinite;
+  /* animation: rotating 0.4s linear infinite; */
+  animation: rotating 3s ease-in-out;
 }
 
 /* Gamer Details */

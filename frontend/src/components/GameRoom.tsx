@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import GamerDetails from "./GamerDetails";
 import ChatRoom from "./ChatRoom";
 import fireMan from "../assets/firePopMan.png";
+import spin from "../assets/audio/spin.mp3";
+import gunShoot from "../assets/audio/gunShoot.mp3";
+import loaded from "../assets/audio/loaded.mp3";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:3001");
@@ -13,6 +16,7 @@ function GameRoom(props: {
   leaveRoom: () => void;
   socket: any;
   address: string;
+  isMuted: boolean;
 }) {
   const [rotating, setRotating] = useState<boolean>(false);
   const [fire, setFire] = useState<boolean>(false);
@@ -57,6 +61,39 @@ function GameRoom(props: {
       </div>
     );
   }
+
+  // Create a new audio object
+  const spinAudio = new Audio(spin);
+  const gunShootAudio = new Audio(gunShoot);
+  const loadedAudio = new Audio(loaded);
+
+  // Function to handle spinning and playing sound
+  const handleSpin = () => {
+    setRotating(true);
+    if (!rotating && !props.isMuted) {
+      spinAudio.play();
+    }
+    setTimeout(() => {
+      setRotating(false);
+    }, 3000);
+  };
+
+  const handleFire = () => {
+    setFire(true);
+    if (!props.isMuted) {
+      loadedAudio.play();
+    }
+    // after loadedAudio finish then play gunshoot audio
+    setTimeout(() => {
+      if (!props.isMuted) {
+        gunShootAudio.play();
+      }
+    }, 1000);
+    // after gunshoot audio finish then set fire to false
+    setTimeout(() => {
+      setFire(false);
+    }, 3000);
+  };
 
   return (
     <>
@@ -104,8 +141,9 @@ function GameRoom(props: {
                   <div
                     className="action-button"
                     onClick={() => {
-                      setRotating(true);
-                      setTimeout(() => setRotating(false), 4000);
+                      handleSpin();
+                      // setRotating(true);
+                      // setTimeout(() => setRotating(false), 3000);
                     }}
                   >
                     SPIN
@@ -116,7 +154,14 @@ function GameRoom(props: {
                     alt="revolver"
                     className={rotating ? "rotatingImage" : ""}
                   />
-                  <div className="action-button" onClick={onClickFire}>
+                  <div
+                    className="action-button"
+                    onClick={() => {
+                      handleFire();
+                      // setFire(true);
+                      // setTimeout(() => setFire(false), 4000);
+                    }}
+                  >
                     FIRE
                   </div>
                 </div>

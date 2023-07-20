@@ -1,14 +1,18 @@
 import createGameImage from "../assets/game.png";
 import { useAccount } from "wagmi";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import GameRoom from "./GameRoom";
+import openDoor from "../assets/audio/openDoor.mp3";
+import bgm from "../assets/audio/bgm.mp3";
+import { Icon } from "@iconify/react";
 
 const socket = io("http://localhost:3001");
 
 function CreateGame() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [roomCode, setRoomCode] = useState<string>("");
+  const [isMuted, setIsMuted] = useState<boolean>(true);
 
   // User will enter the GameRoom based on this state
   const [room, setRoom] = useState<string>("");
@@ -18,21 +22,33 @@ function CreateGame() {
 
   // pass room code to backend
   const joinRandomRoom = () => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     socket.emit("joinRandomRoom", { address });
     setRoom(roomCode);
   };
 
   const joinPrivateRoom = () => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     console.log("Joining room:", roomCode);
     socket.emit("joinPrivateRoom", { roomId: roomCode, address });
     // setRoom(roomCode);
   };
 
   const createPrivateRoom = () => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     socket.emit("createPrivateRoom", { address });
   };
 
   const leaveRoom = () => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     socket.emit("leaveRoom", { roomId: room });
     console.log("ROOMCODE", room);
     setRoom("");
@@ -53,6 +69,9 @@ function CreateGame() {
 
   // Listen for the 'joinedRoom' event
   socket.on("joinedRoom", (data) => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     // 'data' is the object that the server sent, which includes the roomId
     console.log("joinedRoom", data);
     const roomId = data.roomId;
@@ -68,6 +87,9 @@ function CreateGame() {
   });
 
   socket.on("roomLeft", (data) => {
+    if (!isMuted) {
+      openDoorAudio.current.play();
+    }
     setPlayers(data.players);
   });
 
@@ -79,9 +101,41 @@ function CreateGame() {
     setShowModal(false);
   };
 
+  // useref to avoid re-rendering the audio element
+  const bgmAudio = useRef(new Audio(bgm));
+  const openDoorAudio = useRef(new Audio(openDoor));
+
+  useEffect(() => {
+    if (isMuted) {
+      bgmAudio.current.volume = 0;
+      openDoorAudio.current.volume = 0;
+    } else {
+      bgmAudio.current.loop = true;
+      bgmAudio.current.play();
+      bgmAudio.current.volume = 1;
+      openDoorAudio.current.volume = 1;
+    }
+  }, [isMuted]);
+
   return (
     <>
       <main className="outer-container">
+        {isMuted ? (
+          <Icon
+            className="hoverIcon"
+            width={15}
+            icon="subway:sound"
+            onClick={() => setIsMuted(!isMuted)}
+          />
+        ) : (
+          <Icon
+            className="hoverIcon"
+            width={15}
+            icon="subway:sound-2"
+            onClick={() => setIsMuted(!isMuted)}
+          />
+        )}
+
         {room ? (
           <GameRoom
             room={room}
@@ -89,6 +143,7 @@ function CreateGame() {
             leaveRoom={leaveRoom}
             socket={socket}
             address={String(address)}
+            isMuted={isMuted}
           />
         ) : (
           <>

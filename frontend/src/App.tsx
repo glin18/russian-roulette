@@ -33,6 +33,7 @@ const wagmiConfig = createConfig({
   publicClient,
 });
 
+
 function App() {
   return (
     <>
