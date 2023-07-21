@@ -13,6 +13,17 @@ contract Roulette is VRFConsumerBaseV2 {
     uint32 callbackGasLimit = 40000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 4;
+    address s_owner;
+    VRFCoordinatorV2Interface COORDINATOR;
+
+    struct Room {
+        uint256[] firedResults;
+        bool gameActive;
+    }
+
+    mapping(uint256 => Room) public rooms; 
+    mapping(uint256 => uint256) public requestIdToRoomId;
+
 
     uint256[] public firedResults;
 
@@ -28,11 +39,11 @@ contract Roulette is VRFConsumerBaseV2 {
     }
 
     event Fired(uint256 indexed requestId, uint256 indexed roomId);
-    event BulletLanded(uint256 indexed requestId, uint256 indexed roomId);
+    event BulletLanded(uint256 indexed requestId, uint256[] indexed firedResults);
 
     // Obtain requestID
     function fire(uint256 roomId) public onlyOwner returns (uint256 requestId) {
-
+        require(!rooms[roomId].gameActive, "Game in room already active");
         requestId = COORDINATOR.requestRandomWords(
         s_keyHash,
         s_subscriptionId,
@@ -41,17 +52,23 @@ contract Roulette is VRFConsumerBaseV2 {
         numWords
        );
 
-        emit Fired(requestId, roller);
+        requestIdToRoomId[requestId] = roomId;
+        rooms[roomId].gameActive = true;
+        emit Fired(requestId, roomId);
     }
 
     // Obtain actual results
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
 
+        uint256 roomId = requestIdToRoomId[requestId];
+        require(rooms[roomId].gameActive, "No active game for this request");
+
         // array of results
-        firedResults = [randomWords[0] % 2, randomWords[1] % 2,  randomWords[2] % 2, randomWords[3] % 2];
+        rooms[roomId].firedResults = [randomWords[0] % 2, randomWords[1] % 2,  randomWords[2] % 2, randomWords[3] % 2];
+        rooms[roomId].gameActive = false;
 
         // emitting event to signal that results have been created
-        emit BulletLanded(requestId, firedResults);
+        emit BulletLanded(requestId, rooms[roomId].firedResults);
     }
 
 }
