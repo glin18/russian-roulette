@@ -4,10 +4,14 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
+
+require("dotenv").config();
 const hre = require("hardhat");
 
 async function main() {
-  const roulette = await hre.ethers.deployContract("Roulette");
+  const roulette = await hre.ethers.deployContract("Roulette", [
+    process.env.SUBSCRIPTION_ID,
+  ]);
 
   await roulette.waitForDeployment();
 
