@@ -6,6 +6,7 @@ import fireMan from "../assets/firePopMan.png";
 import spin from "../assets/audio/spin.mp3";
 import gunShoot from "../assets/audio/gunShoot.mp3";
 import loaded from "../assets/audio/loaded.mp3";
+import { Icon } from "@iconify/react";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:3001");
@@ -23,6 +24,8 @@ function GameRoom(props: {
   const [gameData, setGameData] = useState<any>();
 
   const [countdown, setCountdown] = useState<number>(0);
+
+  const cashoutOrLeave = true;
 
   // const [gamesData, setGamesData] = useState();
 
@@ -185,9 +188,37 @@ function GameRoom(props: {
             </div>
             <ChatRoom socket={props.socket} room={props.room} />
           </div>
-
-          <div className="leave" onClick={props.leaveRoom}>
-            LEAVE
+          <div className="game-room-footer">
+            <div className="leave" onClick={props.leaveRoom}>
+              <Icon
+                className="hoverIcon"
+                width={15}
+                icon="pepicons-print:leave"
+                onClick={props.leaveRoom}
+              />
+              LEAVE
+            </div>
+            {!cashoutOrLeave ? (
+              <div className="cashout" onClick={props.leaveRoom}>
+                <Icon
+                  className="hoverIcon"
+                  width={15}
+                  icon="game-icons:cash"
+                  onClick={props.leaveRoom}
+                />
+                CASHOUT
+              </div>
+            ) : (
+              <div className="leave" onClick={props.leaveRoom}>
+                <Icon
+                  className="hoverIcon"
+                  width={15}
+                  icon="pepicons-print:leave"
+                  onClick={props.leaveRoom}
+                />
+                LEAVE
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -243,13 +243,54 @@ a {
   text-shadow: 0px 0px 1.5px rgb(231, 231, 231);
 }
 
+.game-room-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.game-room-footer .hoverIcon {
+  transition: all 0.2s ease-in-out;
+  color: #ffffff;
+  margin: 2px;
+  transform: scaleX(-1);
+}
+
 .leave {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 40px;
+  padding: 6px;
+  text-align: center;
+  border-radius: 7px;
+  background-color: #ffc700;
+  cursor: pointer;
+}
+
+.cashout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 40px;
+  padding: 6px;
+  text-align: left;
+  border-radius: 7px;
+  background-color: #e3ccae;
+  cursor: pointer;
+}
+
+.endLeave {
   width: 100px;
   height: 40px;
   padding: 10px;
   text-align: center;
   border-radius: 7px;
-  background-color: #ffc700;
+  background-color: #e3ccae;
   cursor: pointer;
 }
 
