@@ -54,8 +54,8 @@ io.on("connection", (socket) => {
     // Extract roomIds from publicRooms
     const roomIds = Object.keys(publicRooms);
 
-    // Look for a room that isn't full (less than 4 players)
-    let room = roomIds.find((roomId) => publicRooms[roomId]?.length < 4);
+    // Look for a room that isn't full (less than 4 players) and doesn't have a game in progress
+    let room = roomIds.find((roomId) => publicRooms[roomId]?.length < 4 && !gamesData[roomId]);
 
     if (!room) {
       // If no available room, create a new one
