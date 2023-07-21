@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.19;
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
@@ -14,7 +14,7 @@ contract Roulette is VRFConsumerBaseV2 {
     uint16 requestConfirmations = 3;
     uint32 numWords = 4;
 
-    uint256[] firedResults;
+    uint256[] public firedResults;
 
     constructor(uint64 subscriptionId) VRFConsumerBaseV2(vrfCoordinator) {
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
@@ -53,6 +53,5 @@ contract Roulette is VRFConsumerBaseV2 {
         // emitting event to signal that results have been created
         emit BulletLanded(requestId, firedResults);
     }
-
 
 }
