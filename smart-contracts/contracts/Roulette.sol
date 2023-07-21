@@ -10,7 +10,7 @@ contract Roulette is VRFConsumerBaseV2 {
     uint64 s_subscriptionId;
     address vrfCoordinator = 0x8103B0A8A00be2DDC778e6e7eaa21791Cd364625;
     bytes32 s_keyHash = 0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c;
-    uint32 callbackGasLimit = 40000;
+    uint32 callbackGasLimit = 160000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 4;
     address s_owner;

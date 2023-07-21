@@ -1,11 +1,29 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
+import http_ from "http";
+import cors from "cors";
+import { Server } from "socket.io";
 app.use(cors());
+import { abi } from "./abi.js";
 
-const server = http.createServer(app);
+import { createPublicClient, http } from "viem";
+import { sepolia } from "viem/chains";
+
+const client = createPublicClient({
+  chain: sepolia,
+  transport: http(),
+});
+
+const data = await client.readContract({
+  address: "0x509457FcEC7909cba639E52edDdE662069b4bB52",
+  abi: abi,
+  functionName: "rooms",
+  args: [1],
+});
+
+console.log(data);
+
+const server = http_.createServer(app);
 const publicRooms = {};
 const privateRooms = {};
 const playerData = {};
