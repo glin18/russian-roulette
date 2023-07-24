@@ -66,7 +66,7 @@ function generateRoomId() {
 
 const fireVRF = async (room) => {
   await walletClient.writeContract({
-    address: "0x893BB8B9BA725AD7638909Ae1b4f5b4fB7744751",
+    address: CONTRACT_ADDRESS,
     abi: abi,
     functionName: "fire",
     args: [room],
