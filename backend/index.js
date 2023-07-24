@@ -40,7 +40,7 @@ const testingdata = await client.readContract({
 });
 console.log(testingdata);
 
-console.log(data);
+// console.log(data);
 
 const server = http_.createServer(app);
 const publicRooms = {};
@@ -83,8 +83,10 @@ io.on("connection", (socket) => {
     // Extract roomIds from publicRooms
     const roomIds = Object.keys(publicRooms);
 
-    // Look for a room that isn't full (less than 4 players)
-    let room = roomIds.find((roomId) => publicRooms[roomId]?.length < 4);
+    // Look for a room that isn't full (less than 4 players) and doesn't have a game in progress
+    let room = roomIds.find(
+      (roomId) => publicRooms[roomId]?.length < 4 && !gamesData[roomId]
+    );
 
     if (!room) {
       // If no available room, create a new one
@@ -176,6 +178,14 @@ io.on("connection", (socket) => {
       return;
     }
 
+    if (gamesData[room]) {
+      console.log(`Game in room ${room} has already started.`);
+      socket.emit("error", {
+        message: "Cannot join room, game has already started.",
+      });
+      return;
+    }
+
     console.log(`Room ${room} exists and is not full. Adding player to room.`);
     privateRooms[room].push(data.address);
     playerData[socket.id] = {
@@ -200,6 +210,17 @@ io.on("connection", (socket) => {
     console.log(
       `Sent joinedRoom event to player ${data.address} with room ID ${room}.`
     );
+    // Check if room has reached 3 players
+    if (privateRooms[room].length === 3) {
+      gamesData[room] = {
+        players: privateRooms[room],
+        room: room,
+        currentTurn: 0, // Index of the player whose turn it is
+        playersAlive: [true, true, true, true], // All players start off alive
+        playersShot: [false, false, false, false], // Nobody has shot yet
+      };
+      io.in(room).emit("gameStart", gamesData[room]);
+    }
   });
 
   socket.on("leaveRoom", (data) => {
