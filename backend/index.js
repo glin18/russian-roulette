@@ -5,21 +5,40 @@ import cors from "cors";
 import { Server } from "socket.io";
 app.use(cors());
 import { abi } from "./abi.js";
+import "dotenv/config";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { arbitrumGoerli } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
 
-import { createPublicClient, http } from "viem";
-import { sepolia } from "viem/chains";
+const CONTRACT_ADDRESS = "0xE029d61A45a0315AbDa8F188c0cF6eFDB70f8432";
 
 const client = createPublicClient({
-  chain: sepolia,
+  chain: arbitrumGoerli,
+  transport: http(),
+});
+
+const account = privateKeyToAccount(`0x${process.env.PRIVATE_KEY}`);
+
+const walletClient = createWalletClient({
+  account,
+  chain: arbitrumGoerli,
   transport: http(),
 });
 
 const data = await client.readContract({
-  address: "0x509457FcEC7909cba639E52edDdE662069b4bB52",
+  address: CONTRACT_ADDRESS,
+  abi: abi,
+  functionName: "getRoomFiredResults",
+  args: [1],
+});
+
+const testingdata = await client.readContract({
+  address: CONTRACT_ADDRESS,
   abi: abi,
   functionName: "rooms",
   args: [1],
 });
+console.log(testingdata);
 
 console.log(data);
 
@@ -44,6 +63,16 @@ function generateRoomId() {
   // Simple random number as room ID, add more complex logic for production
   return Math.floor(Math.random() * 10000).toString();
 }
+
+const fireVRF = async (room) => {
+  await walletClient.writeContract({
+    address: "0x893BB8B9BA725AD7638909Ae1b4f5b4fB7744751",
+    abi: abi,
+    functionName: "fire",
+    args: [room],
+    account,
+  });
+};
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
@@ -93,6 +122,7 @@ io.on("connection", (socket) => {
     });
 
     if (publicRooms[room].length === 3) {
+      fireVRF(room);
       gamesData[room] = {
         players: publicRooms[room],
         room: room,

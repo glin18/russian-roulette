@@ -106,6 +106,25 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "roomId",
+        type: "uint256",
+      },
+    ],
+    name: "getRoomFiredResults",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "requestId",
         type: "uint256",
       },

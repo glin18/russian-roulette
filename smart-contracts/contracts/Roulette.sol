@@ -7,8 +7,8 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 contract Roulette is VRFConsumerBaseV2 {
     uint64 s_subscriptionId;
-    address vrfCoordinator = 0x8103B0A8A00be2DDC778e6e7eaa21791Cd364625;
-    bytes32 s_keyHash = 0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c;
+    address vrfCoordinator = 0x6D80646bEAdd07cE68cab36c27c626790bBcf17f;
+    bytes32 s_keyHash = 0x83d1b6e3388bed3d76426974512bb0d270e9542a765cd667242ea26c0cc0b730;
     uint32 callbackGasLimit = 160000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 4;
