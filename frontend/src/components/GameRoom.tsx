@@ -30,17 +30,41 @@ function GameRoom(props: {
 
   // const [gamesData, setGamesData] = useState();
 
-  // Listen for the 'GameStarted' event
-  props.socket.on("gameStart", (data: any) => {
-    console.log("gameStarted", data);
-    setGameData(data);
-  });
+  useEffect(() => {
+    // Listen for the 'GameStarted' event
+    props.socket.on("gameStart", (data: any) => {
+      console.log("gameStarted", data);
+      setGameData(data);
+    });
 
-  // Listen for the 'GameStarted' event
-  props.socket.on("roomGamesDataLeft", (data: any) => {
-    console.log("roomGamesDataLeft", data);
-    setGameData(data);
-  });
+    // Listen for the 'GameStarted' event
+    props.socket.on("roomGamesDataLeft", (data: any) => {
+      console.log("roomGamesDataLeft", data);
+      setGameData(data);
+    });
+
+    props.socket.on("fired", (data: any, firedAddress: string) => {
+      console.log("fired data received");
+      setGameData(data);
+      let allShot = true;
+      for (let value of Object.values(data["playersShot"])) {
+        console.log(value);
+        if (!value) {
+          allShot = false;
+          break;
+        }
+      }
+      if (allShot && props.address === firedAddress) {
+        console.log("Next round");
+        props.socket.emit("newRound", props.room);
+      }
+    });
+
+    props.socket.on("newRound", (data: any) => {
+      setGameData(data);
+      setRound((e) => e + 1);
+    });
+  }, []);
 
   useEffect(() => {
     if (props.players.length === 3 && gameData === undefined) {
@@ -58,28 +82,6 @@ function GameRoom(props: {
     props.socket.emit("fired", props.room, props.address);
     setTimeout(() => setFire(false), 4000);
   };
-
-  props.socket.on("fired", (data: any) => {
-    console.log("fired data received");
-    setGameData(data);
-    let allShot = true;
-    for (let value of Object.values(data["playersShot"])) {
-      console.log(value);
-      if (!value) {
-        allShot = false;
-        break;
-      }
-    }
-    if (allShot) {
-      console.log("Next round");
-      setRound((e) => e + 1);
-      props.socket.emit("newRound", props.room);
-    }
-  });
-
-  props.socket.on("newRound", (data: any) => {
-    setGameData(data);
-  });
 
   if (fire) {
     return (
@@ -187,7 +189,9 @@ function GameRoom(props: {
 
                   <div
                     className={
-                      gameData && !gameData?.playersShot[props.address]
+                      gameData &&
+                      !gameData?.playersShot[props.address] &&
+                      gameData["playersAlive"][props.address]
                         ? "action-button"
                         : "action-button disabled-button"
                     }

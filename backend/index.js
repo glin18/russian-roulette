@@ -339,10 +339,12 @@ io.on("connection", (socket) => {
 
     gamesData[String(room)]["playersShot"][address] = true;
     console.log("GAMEDATA", gamesData[String(room)]);
-    io.in(room).emit("fired", gamesData[String(room)]);
+    io.in(room).emit("fired", gamesData[String(room)], address);
   });
 
   socket.on("newRound", (room) => {
+    fireVRF(room);
+
     gamesData[String(room)]["currentTurn"] = 0;
     // // const playerShotObj = {};
     // gamesData[String(room)]["round"]++;
