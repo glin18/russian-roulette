@@ -35,8 +35,14 @@ function GameRoom(props: {
     setGameData(data);
   });
 
+  // Listen for the 'GameStarted' event
+  props.socket.on("roomGamesDataLeft", (data: any) => {
+    console.log("roomGamesDataLeft", data);
+    setGameData(data);
+  });
+
   useEffect(() => {
-    if (props.players.length === 3) {
+    if (props.players.length === 3 && gameData === undefined) {
       setCountdown(5);
       const intervalId = setInterval(() => {
         setCountdown((t) => t - 1);

@@ -281,17 +281,38 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-    if (playerData[socket.id]?.type === "Private") {
-      privateRooms[playerData[socket.id]?.room] = privateRooms[
-        playerData[socket.id]?.room
-      ]?.filter((address) => address != playerData[socket.id].address);
+    console.log("User disconnected", socket.id);
+    let room = playerData[socket.id]?.room;
+    let type = playerData[socket.id]?.type;
+    let address = playerData[socket.id]?.address;
+    let roomList = type === "Private" ? privateRooms : publicRooms;
+    if (room && type && gamesData[room]) {
+      // set the player as dead in game data
+      let playerIndex = gamesData[room].players.findIndex(
+        (playerAddress) => playerAddress === address
+      );
+      console.log("playerIndex", playerIndex);
+      if (playerIndex > -1) {
+        gamesData[room].playersAlive[playerIndex] = false;
+        // Notify other players in the room about this disconnection
+        // io.in(room).emit("playerDisconnected", gamesData[room]);
+        roomList[room][playerIndex] = "disconnected";
+        console.log(roomList, roomList[room]);
+      }
     } else {
-      publicRooms[playerData[socket.id]?.room] = publicRooms[
-        playerData[socket.id]?.room
-      ]?.filter((address) => address != playerData[socket.id].address);
+      roomList[room] = roomList[room]?.filter(
+        (playerAddress) => playerAddress !== address
+      );
     }
+
     delete playerData[socket.id];
+    // Emit a 'roomLeft' event back to the client, including the room ID
+    io.in(room).emit("roomLeft", { roomId: room, players: roomList[room] });
+    console.log(
+      `Sent roomLeft event to player ${socket.id} with room ID ${room}.`
+    );
+    // Emit a 'roomGamesDataLeft' event back to the client, including the room ID
+    io.in(room).emit("roomGamesDataLeft", gamesData[room]);
   });
 
   socket.on("fired", async (room, address) => {
