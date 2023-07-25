@@ -128,6 +128,7 @@ io.on("connection", (socket) => {
         currentTurn: 0, // Index of the player whose turn it is
         playersAlive: playerAliveObj, // All players start off alive
         playersShot: playerShotObj, // Nobody has shot yet
+        // round: 1,
       };
       console.log(gamesData);
       io.in(room).emit("gameStart", gamesData[room]);
@@ -342,7 +343,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("newRound", (room) => {
-    // gamesData[String(room)]["playersShot"].forEach()
+    gamesData[String(room)]["currentTurn"] = 0;
+    // // const playerShotObj = {};
+    // gamesData[String(room)]["round"]++;
+    publicRooms[room].forEach((player) => {
+      console.log(player);
+      if (gamesData[String(room)]["playersAlive"][player]) {
+        gamesData[String(room)]["playersShot"][player] = false;
+      }
+    });
+    console.log("NEW ROUND DATA", gamesData[String(room)]);
+    io.in(room).emit("newRound", gamesData[String(room)]);
   });
 
   //   socket.on("startGame", ({ roomId }) => {

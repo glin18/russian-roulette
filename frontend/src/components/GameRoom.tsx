@@ -24,6 +24,7 @@ function GameRoom(props: {
   const [gameData, setGameData] = useState<any>();
 
   const [countdown, setCountdown] = useState<number>(0);
+  const [round, setRound] = useState<number>(1);
 
   const cashoutOrLeave = true;
 
@@ -71,8 +72,13 @@ function GameRoom(props: {
     }
     if (allShot) {
       console.log("Next round");
+      setRound((e) => e + 1);
       props.socket.emit("newRound", props.room);
     }
+  });
+
+  props.socket.on("newRound", (data: any) => {
+    setGameData(data);
   });
 
   if (fire) {
@@ -129,7 +135,7 @@ function GameRoom(props: {
             <div className="chat-window">
               {gameData && (
                 <>
-                  <div className="started">STARTED! ROUND 1</div>
+                  <div className="started">STARTED! ROUND: {round}</div>
                   {/* <div className="started">
                     CURRENT TURN: GAMER
                     {gameData["currentTurn"] + 1}
@@ -137,7 +143,7 @@ function GameRoom(props: {
                 </>
               )}
               <div>GameRoom: {props.room}</div>
-              <div>Round: 1</div>
+              <div>Round:{round}</div>
               <div>Bet Pool: 0.001 ETH</div>
               <div>Players: {props.players.length}/4</div>
               <div>Waiting for {4 - props.players.length} more players...</div>
