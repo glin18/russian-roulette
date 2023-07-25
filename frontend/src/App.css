@@ -194,6 +194,11 @@ body {
   cursor: pointer;
 }
 
+.disabled-button {
+  opacity: 0.5; /* You can adjust the opacity to make it more or less transparent */
+  pointer-events: none;
+}
+
 .game-room-container .emojiImage {
   width: 50px;
   height: 50px;

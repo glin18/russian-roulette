@@ -48,7 +48,7 @@ function GameRoom(props: {
   const onClickFire = () => {
     setFire(true);
     console.log(gameData);
-    props.socket.emit("fired", props.room);
+    props.socket.emit("fired", props.room, props.address);
     setTimeout(() => setFire(false), 4000);
   };
 
@@ -112,10 +112,10 @@ function GameRoom(props: {
               {gameData && (
                 <>
                   <div className="started">STARTED!</div>
-                  <div className="started">
+                  {/* <div className="started">
                     CURRENT TURN: GAMER
                     {gameData["currentTurn"] + 1}
-                  </div>
+                  </div> */}
                 </>
               )}
               <div>GameRoom: {props.room}</div>
@@ -128,7 +128,7 @@ function GameRoom(props: {
             <div className="game-room-row">
               <GamerDetails
                 address={props.players[0]}
-                shot={gameData && gameData["currentTurn"] > 0}
+                shot={gameData && gameData?.playersShot[props.players[0]]}
                 died={gameData && !gameData["playersAlive"][0]}
                 gamerNumber={1}
                 socket={props.socket}
@@ -137,7 +137,7 @@ function GameRoom(props: {
               <div className="game-room-column">
                 <GamerDetails
                   address={props.players[1] || "WAITING"}
-                  shot={gameData && gameData["currentTurn"] > 1}
+                  shot={gameData && gameData?.playersShot[props.players[1]]}
                   died={gameData && !gameData["playersAlive"][1]}
                   gamerNumber={2}
                   socket={props.socket}
@@ -160,8 +160,13 @@ function GameRoom(props: {
                     alt="revolver"
                     className={rotating ? "rotatingImage" : ""}
                   />
+
                   <div
-                    className="action-button"
+                    className={
+                      gameData && !gameData?.playersShot[props.address]
+                        ? "action-button"
+                        : "action-button disabled-button"
+                    }
                     onClick={() => {
                       handleFire();
                       // setFire(true);
@@ -173,7 +178,7 @@ function GameRoom(props: {
                 </div>
                 <GamerDetails
                   address={props.players[2] || "WAITING"}
-                  shot={gameData && gameData["currentTurn"] > 2}
+                  shot={gameData && gameData?.playersShot[props.players[2]]}
                   died={gameData && !gameData["playersAlive"][2]}
                   gamerNumber={3}
                   socket={props.socket}
@@ -182,7 +187,7 @@ function GameRoom(props: {
               </div>
               <GamerDetails
                 address={props.players[3] || "WAITING"}
-                shot={false}
+                shot={gameData?.playersShot[props.players[3]]}
                 died={gameData && !gameData["playersAlive"][3]}
                 gamerNumber={4}
                 socket={props.socket}

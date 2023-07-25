@@ -118,13 +118,16 @@ io.on("connection", (socket) => {
 
     if (publicRooms[room].length === 3) {
       fireVRF(room);
+      const playerShotObj = {};
+      publicRooms[room].forEach((player) => (playerShotObj[player] = false));
       gamesData[room] = {
         players: publicRooms[room],
         room: room,
         currentTurn: 0, // Index of the player whose turn it is
         playersAlive: [true, true, true, true], // All players start off alive
-        // playersShot: [false, false, false, false], // Nobody has shot yet
+        playersShot: playerShotObj, // Nobody has shot yet
       };
+      console.log(gamesData);
       io.in(room).emit("gameStart", gamesData[room]);
     }
 
@@ -291,8 +294,7 @@ io.on("connection", (socket) => {
     delete playerData[socket.id];
   });
 
-  socket.on("fired", async (room) => {
-    let alive = true;
+  socket.on("fired", async (room, address) => {
     console.log(room);
     console.log("GAMEDATA", gamesData[String(room)]);
 
@@ -310,6 +312,8 @@ io.on("connection", (socket) => {
 
     gamesData[String(room)]["currentTurn"] =
       (gamesData[String(room)]["currentTurn"] + 1) % 3;
+
+    gamesData[String(room)]["playersShot"][address] = true;
     console.log("GAMEDATA", gamesData[String(room)]);
     io.in(room).emit("fired", gamesData[String(room)]);
   });
