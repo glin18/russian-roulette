@@ -25,13 +25,6 @@ const walletClient = createWalletClient({
   transport: http(),
 });
 
-const data = await client.readContract({
-  address: CONTRACT_ADDRESS,
-  abi: abi,
-  functionName: "getRoomFiredResults",
-  args: [1],
-});
-
 const testingdata = await client.readContract({
   address: CONTRACT_ADDRESS,
   abi: abi,
@@ -130,7 +123,7 @@ io.on("connection", (socket) => {
         room: room,
         currentTurn: 0, // Index of the player whose turn it is
         playersAlive: [true, true, true, true], // All players start off alive
-        playersShot: [false, false, false, false], // Nobody has shot yet
+        // playersShot: [false, false, false, false], // Nobody has shot yet
       };
       io.in(room).emit("gameStart", gamesData[room]);
     }
@@ -298,20 +291,25 @@ io.on("connection", (socket) => {
     delete playerData[socket.id];
   });
 
-  socket.on("fired", (room) => {
+  socket.on("fired", async (room) => {
     let alive = true;
     console.log(room);
     console.log("GAMEDATA", gamesData[String(room)]);
 
-    if (Math.floor(Math.random() * 6) + 1 >= 4) {
-      console.log("PLAYER DEAD");
-      alive = false;
-      gamesData[String(room)]["playersAlive"][
-        gamesData[String(room)]["currentTurn"]
-      ] = false;
-    }
+    const fireData = await client.readContract({
+      address: CONTRACT_ADDRESS,
+      abi: abi,
+      functionName: "getRoomFiredResults",
+      args: [room],
+    });
+    console.log(fireData);
+
+    gamesData[String(room)]["playersAlive"][
+      gamesData[String(room)]["currentTurn"]
+    ] = Boolean(fireData[gamesData[String(room)]["currentTurn"]]);
+
     gamesData[String(room)]["currentTurn"] =
-      (gamesData[String(room)]["currentTurn"] + 1) % 4;
+      (gamesData[String(room)]["currentTurn"] + 1) % 3;
     console.log("GAMEDATA", gamesData[String(room)]);
     io.in(room).emit("fired", gamesData[String(room)]);
   });

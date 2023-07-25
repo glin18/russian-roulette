@@ -86,6 +86,9 @@ function GameRoom(props: {
     if (!props.isMuted) {
       loadedAudio.play();
     }
+
+    onClickFire();
+
     // after loadedAudio finish then play gunshoot audio
     setTimeout(() => {
       if (!props.isMuted) {
