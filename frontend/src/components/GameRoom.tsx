@@ -55,6 +55,17 @@ function GameRoom(props: {
   props.socket.on("fired", (data: any) => {
     console.log("fired data received");
     setGameData(data);
+    let allShot = true;
+    for (let value of Object.values(data["playersShot"])) {
+      console.log(value);
+      if (!value) {
+        allShot = false;
+        break;
+      }
+    }
+    if (allShot) {
+      console.log("Next round");
+    }
   });
 
   if (fire) {
@@ -111,7 +122,7 @@ function GameRoom(props: {
             <div className="chat-window">
               {gameData && (
                 <>
-                  <div className="started">STARTED!</div>
+                  <div className="started">STARTED! ROUND 1</div>
                   {/* <div className="started">
                     CURRENT TURN: GAMER
                     {gameData["currentTurn"] + 1}
