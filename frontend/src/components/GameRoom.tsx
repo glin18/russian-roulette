@@ -71,6 +71,7 @@ function GameRoom(props: {
     }
     if (allShot) {
       console.log("Next round");
+      props.socket.emit("newRound", props.room);
     }
   });
 
@@ -146,7 +147,7 @@ function GameRoom(props: {
               <GamerDetails
                 address={props.players[0]}
                 shot={gameData && gameData?.playersShot[props.players[0]]}
-                died={gameData && !gameData["playersAlive"][0]}
+                died={gameData && !gameData["playersAlive"][props.players[0]]}
                 gamerNumber={1}
                 socket={props.socket}
                 room={props.room}
@@ -155,7 +156,7 @@ function GameRoom(props: {
                 <GamerDetails
                   address={props.players[1] || "WAITING"}
                   shot={gameData && gameData?.playersShot[props.players[1]]}
-                  died={gameData && !gameData["playersAlive"][1]}
+                  died={gameData && !gameData["playersAlive"][props.players[1]]}
                   gamerNumber={2}
                   socket={props.socket}
                   room={props.room}
@@ -196,7 +197,7 @@ function GameRoom(props: {
                 <GamerDetails
                   address={props.players[2] || "WAITING"}
                   shot={gameData && gameData?.playersShot[props.players[2]]}
-                  died={gameData && !gameData["playersAlive"][2]}
+                  died={gameData && !gameData["playersAlive"][props.players[2]]}
                   gamerNumber={3}
                   socket={props.socket}
                   room={props.room}
@@ -205,7 +206,7 @@ function GameRoom(props: {
               <GamerDetails
                 address={props.players[3] || "WAITING"}
                 shot={gameData?.playersShot[props.players[3]]}
-                died={gameData && !gameData["playersAlive"][3]}
+                died={gameData && !gameData["playersAlive"][props.players[3]]}
                 gamerNumber={4}
                 socket={props.socket}
                 room={props.room}

@@ -119,12 +119,14 @@ io.on("connection", (socket) => {
     if (publicRooms[room].length === 3) {
       fireVRF(room);
       const playerShotObj = {};
+      const playerAliveObj = {};
       publicRooms[room].forEach((player) => (playerShotObj[player] = false));
+      publicRooms[room].forEach((player) => (playerAliveObj[player] = true));
       gamesData[room] = {
         players: publicRooms[room],
         room: room,
         currentTurn: 0, // Index of the player whose turn it is
-        playersAlive: [true, true, true, true], // All players start off alive
+        playersAlive: playerAliveObj, // All players start off alive
         playersShot: playerShotObj, // Nobody has shot yet
       };
       console.log(gamesData);
@@ -327,9 +329,9 @@ io.on("connection", (socket) => {
     });
     console.log(fireData);
 
-    gamesData[String(room)]["playersAlive"][
-      gamesData[String(room)]["currentTurn"]
-    ] = Boolean(fireData[gamesData[String(room)]["currentTurn"]]);
+    gamesData[String(room)]["playersAlive"][address] = Boolean(
+      fireData[gamesData[String(room)]["currentTurn"]]
+    );
 
     gamesData[String(room)]["currentTurn"] =
       (gamesData[String(room)]["currentTurn"] + 1) % 3;
@@ -337,6 +339,10 @@ io.on("connection", (socket) => {
     gamesData[String(room)]["playersShot"][address] = true;
     console.log("GAMEDATA", gamesData[String(room)]);
     io.in(room).emit("fired", gamesData[String(room)]);
+  });
+
+  socket.on("newRound", (room) => {
+    // gamesData[String(room)]["playersShot"].forEach()
   });
 
   //   socket.on("startGame", ({ roomId }) => {
