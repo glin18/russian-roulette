@@ -1,5 +1,7 @@
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import Emoji from "./Emoji";
+import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
 
 function GamerDetails(props: {
   address: string;
@@ -9,23 +11,57 @@ function GamerDetails(props: {
   socket: any;
   room: string;
 }) {
+  const [isSkull, setIsSkull] = useState(false);
+
+  useEffect(() => {
+    props.socket.on("fired", (data: any, address: string) => {
+        console.log("fired data received", data);
+        if (address === props.address) {
+            const isPlayerAlive = data.playersAlive[address];
+            console.log("fired data received", isPlayerAlive);
+            setIsSkull(true);
+            const interval = setInterval(() => {
+                setIsSkull((prev) => !prev);
+            }, 100); // switch every 100 ms
+
+            setTimeout(() => {
+                clearInterval(interval);
+                setIsSkull(!isPlayerAlive); // after flashing, the icon depends on the most recent alive status
+                console.log("isPlayerAlive", isPlayerAlive);
+            }, 3000);
+        }
+    });
+
+    return () => {
+        props.socket.off("fired");
+    };
+}, [props.address, props.socket]);
+
   return (
     <div>
       {props.address !== "WAITING" && props.address !== "disconnected" ? (
         <div className="jazzicon-emoji">
-          <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+          {isSkull ? (
+            <Icon width={50} icon="healthicons:skull" />
+          ) : (
+            <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+          )}
           <Emoji
             socket={props.socket}
             room={props.room}
             address={props.address}
           />
         </div>
-      ): null}
+      ) : null}
       <div className="gamer-address">
         <a
           href={"https://etherscan.io/address/" + props.address}
           target="_blank"
-          className={props.address === "WAITING" || props.address === "disconnected" ? "a-disable" : ""}
+          className={
+            props.address === "WAITING" || props.address === "disconnected"
+              ? "a-disable"
+              : ""
+          }
         >
           Gamer {String(props.gamerNumber)}:{" "}
           {props.address === "WAITING"
