@@ -47,14 +47,20 @@ function GameRoom(props: {
       console.log("fired data received");
       setGameData(data);
       let allShot = true;
-      for (let value of Object.values(data["playersShot"])) {
-        console.log(value);
-        if (!value) {
+      let aliveCount = 0;
+      for (let key in data["playersAlive"]) {
+        if (data["playersAlive"][key]) {
+          aliveCount += 1;
+        }
+        if (!data["playersShot"][key]) {
           allShot = false;
-          break;
         }
       }
-      if (allShot && props.address === firedAddress) {
+      // Check game over conditions
+      if (aliveCount <= 1) {
+        console.log("Game Over");
+        props.socket.emit("gameOver", props.room);
+      } else if (allShot && props.address === firedAddress) {
         console.log("Next round");
         props.socket.emit("newRound", props.room);
       }
