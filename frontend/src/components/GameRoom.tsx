@@ -83,13 +83,13 @@ function GameRoom(props: {
     // setTimeout(() => setFire(false), 2000);
   };
 
-  if (fire) {
-    return (
-      <div className="fire-container">
-        <img src={fireMan} alt="fireman" />
-      </div>
-    );
-  }
+  // if (fire) {
+  //   return (
+  //     <div className="fire-container">
+  //       <img src={fireMan} alt="fireman" />
+  //     </div>
+  //   );
+  // }
 
   // Create a new audio object
   const spinAudio = new Audio(spin);
@@ -129,6 +129,14 @@ function GameRoom(props: {
 
   return (
     <>
+      {fire && (
+        <>
+          <div className="fire-container">
+            <img src={fireMan} alt="fireman" />
+          </div>
+          <div className="overlay"></div>
+        </>
+      )}
       {countdown > 0 ? (
         <div>Game starting in: {countdown}</div>
       ) : (

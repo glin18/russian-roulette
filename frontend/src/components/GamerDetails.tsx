@@ -15,7 +15,6 @@ function GamerDetails(props: {
 
   useEffect(() => {
     props.socket.on("fired2", (data: any, address: string) => {
-      console.log("fired data received", data);
       if (address === props.address) {
         const isPlayerAlive = data.playersAlive[address];
         console.log("fired data received", isPlayerAlive);

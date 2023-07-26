@@ -11,6 +11,7 @@ import { arbitrumGoerli } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
 const CONTRACT_ADDRESS = "0xE029d61A45a0315AbDa8F188c0cF6eFDB70f8432";
+// const CONTRACT_ADDRESS = "0x5ac075eA858601d82b3518077d5132d3ba9D2D46";
 
 const client = createPublicClient({
   chain: arbitrumGoerli,
