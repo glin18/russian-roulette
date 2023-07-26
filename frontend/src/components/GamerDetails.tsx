@@ -14,8 +14,7 @@ function GamerDetails(props: {
   const [isSkull, setIsSkull] = useState(false);
 
   useEffect(() => {
-    props.socket.on("fired", (data: any, address: string) => {
-        console.log("fired data received", data);
+    props.socket.on("fired2", (data: any, address: string) => {
         if (address === props.address) {
             const isPlayerAlive = data.playersAlive[address];
             console.log("fired data received", isPlayerAlive);
@@ -33,9 +32,9 @@ function GamerDetails(props: {
     });
 
     return () => {
-        props.socket.off("fired");
+        props.socket.off("fired2");
     };
-}, [props.address, props.socket]);
+}, []);
 
   return (
     <div>
