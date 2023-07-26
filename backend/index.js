@@ -340,6 +340,7 @@ io.on("connection", (socket) => {
     gamesData[String(room)]["playersShot"][address] = true;
     console.log("GAMEDATA", gamesData[String(room)]);
     io.in(room).emit("fired", gamesData[String(room)], address);
+    io.in(room).emit("fired2", gamesData[String(room)], address);
   });
 
   socket.on("newRound", (room) => {

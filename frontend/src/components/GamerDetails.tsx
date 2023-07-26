@@ -14,28 +14,28 @@ function GamerDetails(props: {
   const [isSkull, setIsSkull] = useState(false);
 
   useEffect(() => {
-    props.socket.on("fired", (data: any, address: string) => {
-        console.log("fired data received", data);
-        if (address === props.address) {
-            const isPlayerAlive = data.playersAlive[address];
-            console.log("fired data received", isPlayerAlive);
-            setIsSkull(true);
-            const interval = setInterval(() => {
-                setIsSkull((prev) => !prev);
-            }, 100); // switch every 100 ms
+    props.socket.on("fired2", (data: any, address: string) => {
+      console.log("fired data received", data);
+      if (address === props.address) {
+        const isPlayerAlive = data.playersAlive[address];
+        console.log("fired data received", isPlayerAlive);
+        setIsSkull(true);
+        const interval = setInterval(() => {
+          setIsSkull((prev) => !prev);
+        }, 100); // switch every 100 ms
 
-            setTimeout(() => {
-                clearInterval(interval);
-                setIsSkull(!isPlayerAlive); // after flashing, the icon depends on the most recent alive status
-                console.log("isPlayerAlive", isPlayerAlive);
-            }, 3000);
-        }
+        setTimeout(() => {
+          clearInterval(interval);
+          setIsSkull(!isPlayerAlive); // after flashing, the icon depends on the most recent alive status
+          console.log("isPlayerAlive", isPlayerAlive);
+        }, 3000);
+      }
     });
 
     return () => {
-        props.socket.off("fired");
+      props.socket.off("fired2");
     };
-}, [props.address, props.socket]);
+  }, []);
 
   return (
     <div>
