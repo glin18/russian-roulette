@@ -5,13 +5,15 @@ import cors from "cors";
 import { Server } from "socket.io";
 app.use(cors());
 import { abi } from "./abi.js";
+import { walletABI } from "./walletABI.js";
 import "dotenv/config";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { arbitrumGoerli } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
-const CONTRACT_ADDRESS = "0xE029d61A45a0315AbDa8F188c0cF6eFDB70f8432";
-// const CONTRACT_ADDRESS = "0x5ac075eA858601d82b3518077d5132d3ba9D2D46";
+// const CONTRACT_ADDRESS = "0xE029d61A45a0315AbDa8F188c0cF6eFDB70f8432";
+const CONTRACT_ADDRESS = "0x5ac075eA858601d82b3518077d5132d3ba9D2D46";
+const WALLET_CONTRACT_ADDRESS = "0xa9f2950DeE0FfbF8a833C61a731661946d838d22";
 
 const client = createPublicClient({
   chain: arbitrumGoerli,
@@ -64,6 +66,16 @@ const fireVRF = async (room) => {
     abi: abi,
     functionName: "fire",
     args: [room],
+    account,
+  });
+};
+
+const cashOut = async (aliveNumber, addresslist) => {
+  await walletClient.writeContract({
+    address: WALLET_CONTRACT_ADDRESS,
+    abi: walletABI,
+    functionName: "cashOut",
+    args: [aliveNumber, addresslist],
     account,
   });
 };
@@ -121,12 +133,17 @@ io.on("connection", (socket) => {
       fireVRF(room);
       const playerShotObj = {};
       const playerAliveObj = {};
-      publicRooms[room].forEach((player) => (playerShotObj[player] = false));
-      publicRooms[room].forEach((player) => (playerAliveObj[player] = true));
+      const prevAliveObj = {};
+      publicRooms[room].forEach((player) => {
+        playerShotObj[player] = false;
+        playerAliveObj[player] = true;
+        prevAliveObj[player] = true; // Initialize previous alive status
+      });
       gamesData[room] = {
         players: publicRooms[room],
         room: room,
         currentTurn: 0, // Index of the player whose turn it is
+        prevAlive: prevAliveObj, // Previous round's alive status
         playersAlive: playerAliveObj, // All players start off alive
         playersShot: playerShotObj, // Nobody has shot yet
         // round: 1,
@@ -216,6 +233,7 @@ io.on("connection", (socket) => {
         players: privateRooms[room],
         room: room,
         currentTurn: 0, // Index of the player whose turn it is
+        // prvAlive: [true, true, true, true], // All players previous start off alive
         playersAlive: [true, true, true, true], // All players start off alive
         playersShot: [false, false, false, false], // Nobody has shot yet
       };
@@ -331,6 +349,11 @@ io.on("connection", (socket) => {
     });
     console.log(fireData);
 
+    // Store current alive status to previous before updating it
+    gamesData[String(room)]["prevAlive"] = {
+      ...gamesData[String(room)]["playersAlive"],
+    };
+
     gamesData[String(room)]["playersAlive"][address] = Boolean(
       fireData[gamesData[String(room)]["currentTurn"]]
     );
@@ -358,6 +381,45 @@ io.on("connection", (socket) => {
     });
     console.log("NEW ROUND DATA", gamesData[String(room)]);
     io.in(room).emit("newRound", gamesData[String(room)]);
+  });
+
+  socket.on("gameOver", (room) => {
+    console.log("GAME OVER");
+    console.log("GAME OVER");
+
+    const roomData = gamesData[String(room)];
+    const { playersAlive, prevAlive } = roomData;
+
+    // Count the number of alive players
+    const alivePlayers = Object.keys(playersAlive).filter(
+      (player) => playersAlive[player]
+    );
+
+    let aliveAddressList = [];
+    let aliveNumber = 0;
+
+    if (alivePlayers.length === 0) {
+      // If all players died, use prevAlive data
+      aliveAddressList = Object.keys(prevAlive).filter(
+        (player) => prevAlive[player]
+      );
+      aliveNumber = 4 - aliveAddressList.length;
+    } else {
+      // If some players are alive, use current round data
+      aliveAddressList = alivePlayers;
+      aliveNumber = 4 - alivePlayers.length;
+    }
+
+    // Call cashout function
+    try {
+      console.log("cashout function called", aliveNumber, aliveAddressList)
+      const result = cashOut(aliveNumber, aliveAddressList);
+      console.log(result);
+    } catch (error) {
+      console.error("Error while calling the cashout function:", error);
+    }
+
+    io.in(room).emit("gameOver");
   });
 
   //   socket.on("startGame", ({ roomId }) => {

@@ -57,7 +57,7 @@ function GameRoom(props: {
         }
       }
       // Check game over conditions
-      if (aliveCount <= 1) {
+      if (allShot && props.address === firedAddress && aliveCount <= 1) {
         console.log("Game Over");
         props.socket.emit("gameOver", props.room);
       } else if (allShot && props.address === firedAddress) {

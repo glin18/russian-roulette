@@ -106,7 +106,7 @@ function CreateGame() {
     address: import.meta.env.VITE_ROULETTEVAULT_CONTRACT || "" as `0x${string}`,
     abi: RouletteVault,
     functionName: "depositA",
-    value: BigInt(`${0.01 * 10 ** 18}`),
+    value: BigInt(`${0.0001 * 10 ** 18}`),
   });
 
   const { write: bet } = useContractWrite({
@@ -190,7 +190,7 @@ function CreateGame() {
                   <div className="modal-content-header">
                     <div style={{ visibility: "hidden" }}> &times;</div>
                     <div className="bet-button" onClick={onClickBet}>
-                      Bet 0.01 ETH
+                      Bet 0.0001 ETH
                     </div>
                     <span className="close" onClick={onClickClose}>
                       &times;
