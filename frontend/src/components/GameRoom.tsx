@@ -86,7 +86,7 @@ function GameRoom(props: {
     setFire(true);
     console.log(gameData);
     props.socket.emit("fired", props.room, props.address);
-    setTimeout(() => setFire(false), 4000);
+    // setTimeout(() => setFire(false), 2000);
   };
 
   // if (fire) {
@@ -114,7 +114,7 @@ function GameRoom(props: {
   };
 
   const handleFire = () => {
-    setFire(true);
+    // setFire(true);
     if (!props.isMuted) {
       loadedAudio.play();
     }
